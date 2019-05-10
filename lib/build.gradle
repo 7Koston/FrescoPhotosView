@@ -1,0 +1,43 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    compileSdkVersion buildConfig.compileSdk
+
+
+    defaultConfig {
+        minSdkVersion buildConfig.minSdk
+        targetSdkVersion buildConfig.targetSdk
+        versionCode 1
+        versionName "1.0.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        vectorDrawables.useSupportLibrary = true
+
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            useProguard false
+            zipAlignEnabled true
+        }
+        debug {
+            minifyEnabled false
+            useProguard false
+            zipAlignEnabled true
+        }
+    }
+}
+
+dependencies {
+    implementation deps.androidx.appcompat
+    implementation deps.androidx.recyclerview
+    implementation deps.fresco.fresco
+    implementation deps.fresco.animatedwebp
+    implementation deps.fresco.webpsupport
+    implementation deps.fresco.imagepipelineokhttp3
+}
