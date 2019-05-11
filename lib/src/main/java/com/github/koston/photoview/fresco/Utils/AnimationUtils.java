@@ -1,4 +1,4 @@
-package com.github.koston.photoview.fresco;
+package com.github.koston.photoview.fresco.Utils;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
@@ -9,13 +9,13 @@ import android.view.ViewConfiguration;
 /*
  * Created by troy379 on 14.09.16.
  */
-final class AnimationUtils {
+public final class AnimationUtils {
 
     private AnimationUtils() {
         throw new AssertionError();
     }
 
-    static void animateVisibility(final View view) {
+  public static void animateVisibility(final View view) {
         final boolean isVisible = view.getVisibility() == View.VISIBLE;
         float from = isVisible ? 1.0f : 0.0f, to = isVisible ? 0.0f : 1.0f;
 

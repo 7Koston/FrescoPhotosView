@@ -1,2 +1,10 @@
 <manifest
-  package="com.github.koston.photoview.fresco"/>
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  package="com.github.koston.photoview.fresco">
+
+  <application>
+    <activity
+      android:name=".FrescoPhotoView"
+      android:theme="@style/AppTheme.Transparent"/>
+  </application>
+</manifest>

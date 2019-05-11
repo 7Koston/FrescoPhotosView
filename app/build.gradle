@@ -3,11 +3,6 @@ apply plugin: 'com.android.application'
 ext.okHttp3 = '3.12.3'
 
 android {
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
     compileSdkVersion buildConfig.compileSdk
 
     defaultConfig {
@@ -15,7 +10,7 @@ android {
         minSdkVersion buildConfig.minSdk
         targetSdkVersion buildConfig.targetSdk
         versionCode 1
-        versionName "1.0.8"
+        versionName "1.0.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -33,6 +28,10 @@ android {
             zipAlignEnabled true
         }
     }
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
+    }
 }
 
 dependencies {
@@ -44,7 +43,6 @@ dependencies {
     implementation deps.fresco.imagepipelineokhttp3
     implementation project(':lib')
 
-    implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation "com.google.android.material:material:1.1.0-alpha06"
     implementation "com.squareup.okhttp3:logging-interceptor:$okHttp3"

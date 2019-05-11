@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+  <style name="AppTheme.Transparent" parent="AppTheme.Base">
+    <!--BASE-->
+    <item name="android:windowIsTranslucent">true</item>
+    <item name="android:windowBackground">@android:color/transparent</item>
+    <item name="android:windowContentOverlay">@null</item>
+    <item name="android:windowNoTitle">true</item>
+    <item name="android:backgroundDimEnabled">false</item>
+    <item name="android:windowActionBar">false</item>
+    <item name="windowActionBar">false</item>
+    <!--19+-->
+    <item name="android:windowTranslucentStatus">false</item>
+    <!--21+-->
+    <item name="android:statusBarColor">@android:color/black</item>
+    <!--23+-->
+    <item name="android:windowLightStatusBar">false</item>
+    <!--27+-->
+    <item name="android:windowLightNavigationBar">false</item>
+    <item name="android:navigationBarColor">@android:color/black</item>
+  </style>
+</resources>

@@ -18,52 +18,52 @@ import android.view.View;
  * limitations under the License.
  * *****************************************************************************
  */
-interface IAttacher {
+public interface IAttacher {
 
-    float DEFAULT_MAX_SCALE = 3.0f;
-    float DEFAULT_MID_SCALE = 1.75f;
-    float DEFAULT_MIN_SCALE = 1.0f;
-    long ZOOM_DURATION = 200L;
+  float DEFAULT_MAX_SCALE = 3.0f;
+  float DEFAULT_MID_SCALE = 1.75f;
+  float DEFAULT_MIN_SCALE = 1.0f;
+  long ZOOM_DURATION = 200L;
 
-    float getMinimumScale();
+  float getMinimumScale();
 
-    void setMinimumScale(float minimumScale);
+  void setMinimumScale(float minimumScale);
 
-    float getMediumScale();
+  float getMediumScale();
 
-    void setMediumScale(float mediumScale);
+  void setMediumScale(float mediumScale);
 
-    float getMaximumScale();
+  float getMaximumScale();
 
-    void setMaximumScale(float maximumScale);
+  void setMaximumScale(float maximumScale);
 
-    float getScale();
+  float getScale();
 
-    void setScale(float scale);
+  void setScale(float scale);
 
-    void setScale(float scale, boolean animate);
+  void setScale(float scale, boolean animate);
 
-    void setScale(float scale, float focalX, float focalY, boolean animate);
+  void setScale(float scale, float focalX, float focalY, boolean animate);
 
-    void setOrientation(@Attacher.OrientationMode int orientation);
+  void setOrientation(@Attacher.OrientationMode int orientation);
 
-    void setZoomTransitionDuration(long duration);
+  void setZoomTransitionDuration(long duration);
 
-    void setAllowParentInterceptOnEdge(boolean allow);
+  void setAllowParentInterceptOnEdge(boolean allow);
 
-    void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener listener);
+  void setOnDoubleTapListener(GestureDetector.OnDoubleTapListener listener);
 
-    void setOnScaleChangeListener(OnScaleChangeListener listener);
+  void setOnScaleChangeListener(OnScaleChangeListener listener);
 
-    void setOnLongClickListener(View.OnLongClickListener listener);
+  void setOnLongClickListener(View.OnLongClickListener listener);
 
-    OnPhotoTapListener getOnPhotoTapListener();
+  OnPhotoTapListener getOnPhotoTapListener();
 
-    void setOnPhotoTapListener(OnPhotoTapListener listener);
+  void setOnPhotoTapListener(OnPhotoTapListener listener);
 
-    OnViewTapListener getOnViewTapListener();
+  OnViewTapListener getOnViewTapListener();
 
-    void setOnViewTapListener(OnViewTapListener listener);
+  void setOnViewTapListener(OnViewTapListener listener);
 
-    void update(int imageInfoWidth, int imageInfoHeight);
+  void update(int imageInfoWidth, int imageInfoHeight);
 }

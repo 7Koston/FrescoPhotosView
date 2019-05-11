@@ -1,11 +1,6 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
     compileSdkVersion buildConfig.compileSdk
 
 
@@ -30,6 +25,11 @@ android {
             useProguard false
             zipAlignEnabled true
         }
+    }
+
+    compileOptions {
+        sourceCompatibility 1.8
+        targetCompatibility 1.8
     }
 }
 
