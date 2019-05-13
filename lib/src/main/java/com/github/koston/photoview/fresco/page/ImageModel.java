@@ -19,7 +19,7 @@ public class ImageModel implements Parcelable {
         }
       };
   private Uri uri;
-  private boolean scaled;
+  private boolean scaled = false;
 
   public ImageModel(String url) {
     uri = Uri.parse(url);
@@ -30,7 +30,6 @@ public class ImageModel implements Parcelable {
   }
 
   public ImageModel(Parcel in) {
-    scaled = in.readByte() == 1;
     uri = in.readParcelable(Uri.class.getClassLoader());
   }
 
@@ -41,7 +40,6 @@ public class ImageModel implements Parcelable {
 
   @Override
   public void writeToParcel(Parcel dest, int flags) {
-    dest.writeByte((byte) (scaled ? 1 : 0));
     dest.writeParcelable(uri, flags);
   }
 
@@ -49,7 +47,7 @@ public class ImageModel implements Parcelable {
     return uri;
   }
 
-  public boolean getScaled() {
+  public boolean isScaled() {
     return scaled;
   }
 

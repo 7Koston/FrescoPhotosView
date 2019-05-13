@@ -5,7 +5,7 @@
     <item name="colorPrimary">@android:color/black</item>
     <item name="colorPrimaryDark">@android:color/black</item>
     <item name="colorAccent">@android:color/black</item>
-    <item name="android:fitsSystemWindows">true</item>
+    <item name="android:fitsSystemWindows">false</item>
   </style>
 
   <style name="AppTheme.Transparent" parent="AppTheme.Base">

@@ -28,6 +28,7 @@ public class MainActivity extends AppCompatActivity {
                     Uri.parse(
                         "https://ruranobe.ru/images/thumb/8/85/NGNL_v01_a.jpg/720px-NGNL_v01_a.jpg"))
                 .setShowStatusBar(false)
+                .setShowNavigationBar(false)
                 .show(this));
   }
 }

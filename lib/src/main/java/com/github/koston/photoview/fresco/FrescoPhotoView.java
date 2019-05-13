@@ -23,15 +23,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.ViewPager;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
-import com.github.koston.photoview.fresco.Utils.AnimationUtils;
-import com.github.koston.photoview.fresco.Utils.SystemUIUtils;
 import com.github.koston.photoview.fresco.page.ImageAdapter;
 import com.github.koston.photoview.fresco.page.ImageBinder;
 import com.github.koston.photoview.fresco.page.ImageModel;
+import com.github.koston.photoview.fresco.utils.AnimationUtils;
+import com.github.koston.photoview.fresco.utils.SystemUIUtils;
 import java.util.List;
 
-public class FrescoPhotoView extends AppCompatActivity implements ImageBinder, OnDismissListener,
-    SwipeToDismissListener.OnViewMoveListener {
+public class FrescoPhotoView extends AppCompatActivity
+    implements ImageBinder, OnDismissListener, SwipeToDismissListener.OnViewMoveListener {
 
   private boolean horizontal;
   private boolean showNavigationBar;
@@ -112,7 +112,7 @@ public class FrescoPhotoView extends AppCompatActivity implements ImageBinder, O
         .getDecorView()
         .setSystemUiVisibility(
             SystemUIUtils.computeSystemUI(
-                lightStatusBar, lightNavigationBar, showStatusBar, showNavigationBar));
+                lightStatusBar, lightNavigationBar, !showStatusBar, !showNavigationBar));
 
     backgroundView = getWindow().getDecorView();
 
@@ -121,8 +121,7 @@ public class FrescoPhotoView extends AppCompatActivity implements ImageBinder, O
 
     backgroundView.setBackgroundColor(backgroundColor);
     dismissContainer = findViewById(R.id.container);
-    swipeDismissListener = new SwipeToDismissListener(findViewById(R.id.dismissView), this,
-        this);
+    swipeDismissListener = new SwipeToDismissListener(findViewById(R.id.dismissView), this, this);
     dismissContainer.setOnTouchListener(swipeDismissListener);
 
     directionDetector =
@@ -134,18 +133,25 @@ public class FrescoPhotoView extends AppCompatActivity implements ImageBinder, O
         };
 
     scaleDetector =
-        new ScaleGestureDetector(
-            this, new ScaleGestureDetector.SimpleOnScaleGestureListener());
+        new ScaleGestureDetector(this, new ScaleGestureDetector.SimpleOnScaleGestureListener());
 
     gestureDetector =
         new GestureDetectorCompat(
             this,
             new GestureDetector.SimpleOnGestureListener() {
               @Override
+              public boolean onDoubleTap(MotionEvent e) {
+                return false;
+              }
+
+              @Override
+              public boolean onDoubleTapEvent(MotionEvent e) {
+                return false;
+              }
+
+              @Override
               public boolean onSingleTapConfirmed(MotionEvent e) {
-                if (rvActivity.isScrolled()) {
-                  onClick(e, isOverlayWasClicked);
-                }
+                onClick(e, isOverlayWasClicked);
                 return false;
               }
             });
@@ -253,13 +259,19 @@ public class FrescoPhotoView extends AppCompatActivity implements ImageBinder, O
       }
     }
 
-    if (!models[layoutManager.findFirstVisibleItemPosition()].getScaled()) {
+    int curPos = layoutManager.findFirstVisibleItemPosition();
+    for (int i = 0; i < getItemCount(); i++) {
+      if (i != curPos) {
+        models[i].setScaled(false);
+      }
+    }
+    if (curPos != -1 && !models[curPos].isScaled()) {
       directionDetector.onTouchEvent(event);
       if (direction != null) {
         switch (direction) {
           case UP:
           case DOWN:
-            if (isSwipeToDismissAllowed && !wasScaled && rvActivity.isScrolled()) {
+            if (isSwipeToDismissAllowed && !wasScaled) {
               return swipeDismissListener.onTouch(dismissContainer, event);
             } else {
               break;
@@ -297,7 +309,9 @@ public class FrescoPhotoView extends AppCompatActivity implements ImageBinder, O
 
   private void onActionUp(MotionEvent event) {
     swipeDismissListener.onTouch(dismissContainer, event);
-    rvActivity.dispatchTouchEvent(event);
+    if (!rvActivity.isScrolled()) {
+      rvActivity.dispatchTouchEvent(event);
+    }
     isOverlayWasClicked = dispatchOverlayTouch(event);
   }
 

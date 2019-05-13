@@ -1,4 +1,4 @@
-package com.github.koston.photoview.fresco.Utils;
+package com.github.koston.photoview.fresco.utils;
 
 import android.os.Build;
 import android.view.View;
@@ -26,7 +26,7 @@ public final class SystemUIUtils {
       boolean hideNavigationBar) {
     int ui = 0;
     if (Build.VERSION.SDK_INT < 19) {
-      ui = View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+      ui = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
       if (hideStatusBar) {
         ui = ui | View.SYSTEM_UI_FLAG_FULLSCREEN;
       }
@@ -36,8 +36,7 @@ public final class SystemUIUtils {
     } else if (Build.VERSION.SDK_INT < 23) {
       ui =
           View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-              | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-              | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+              | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
       if (hideStatusBar) {
         ui = ui | View.SYSTEM_UI_FLAG_FULLSCREEN;
       }
@@ -47,8 +46,7 @@ public final class SystemUIUtils {
     } else if (Build.VERSION.SDK_INT < 27) {
       ui =
           View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-              | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-              | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+              | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
       if (hideStatusBar) {
         ui = ui | View.SYSTEM_UI_FLAG_FULLSCREEN;
       }
@@ -61,8 +59,7 @@ public final class SystemUIUtils {
     } else if (Build.VERSION.SDK_INT < 30) {
       ui =
           View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-              | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-              | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
+              | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
       if (hideStatusBar) {
         ui = ui | View.SYSTEM_UI_FLAG_FULLSCREEN;
       }

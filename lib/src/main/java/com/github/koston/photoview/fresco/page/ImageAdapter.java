@@ -24,9 +24,23 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageViewHolder> {
   @Override
   public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
     holder.pdvPage.setPhotoUri(imageBinder.getModelAtPosition(position).getUri());
+    holder.pdvPage.setScale(0.1f);
     holder.pdvPage.setOnScaleChangeListener(
-        (scaleFactor, focusX, focusY) ->
-            imageBinder.getModelAtPosition(position).setScaled(holder.pdvPage.getScale() > 1.0f));
+        (scaleFactor, scale, focusX, focusY) -> {
+          if (scaleFactor > 1.0f) {
+            if (scale >= 1.0f) {
+              imageBinder.getModelAtPosition(position).setScaled(true);
+            } else {
+              imageBinder.getModelAtPosition(position).setScaled(false);
+            }
+          } else {
+            if (scale <= 1.0f) {
+              imageBinder.getModelAtPosition(position).setScaled(true);
+            } else {
+              imageBinder.getModelAtPosition(position).setScaled(false);
+            }
+          }
+        });
   }
 
   @Override

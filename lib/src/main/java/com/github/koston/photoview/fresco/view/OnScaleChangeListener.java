@@ -14,5 +14,5 @@ public interface OnScaleChangeListener {
    * @param focusX focal point X position
    * @param focusY focal point Y position
    */
-  void onScaleChange(float scaleFactor, float focusX, float focusY);
+  void onScaleChange(float scaleFactor, float scale, float focusX, float focusY);
 }

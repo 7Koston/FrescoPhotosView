@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class PhotoViewRecyclerView extends RecyclerView {
 
-  private boolean isDisallowIntercept, isScrolled = true;
+  private boolean isDisallowIntercept, isScrolled = false;
 
   public PhotoViewRecyclerView(@NonNull Context context) {
     super(context);
@@ -25,11 +25,6 @@ public class PhotoViewRecyclerView extends RecyclerView {
       @NonNull Context context, @Nullable AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
     setScrollStateListener();
-  }
-
-  @Override
-  public boolean performClick() {
-    return super.performClick();
   }
 
   @Override
@@ -65,9 +60,6 @@ public class PhotoViewRecyclerView extends RecyclerView {
 
   @Override
   public boolean onTouchEvent(MotionEvent ev) {
-    if (ev.getAction() == MotionEvent.ACTION_UP) {
-      performClick();
-    }
     try {
       return super.onTouchEvent(ev);
     } catch (IllegalArgumentException ex) {

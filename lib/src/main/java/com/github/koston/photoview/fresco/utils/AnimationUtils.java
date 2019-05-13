@@ -1,4 +1,4 @@
-package com.github.koston.photoview.fresco.Utils;
+package com.github.koston.photoview.fresco.utils;
 
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
