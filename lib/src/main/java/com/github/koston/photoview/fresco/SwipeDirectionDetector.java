@@ -23,7 +23,7 @@ import android.view.ViewConfiguration;
 /*
  * Created by Alexander Krol (troy379) on 29.08.16.
  */
-abstract class SwipeDirectionDetector {
+public abstract class SwipeDirectionDetector {
 
     private final int touchSlop;
     private float startX, startY;

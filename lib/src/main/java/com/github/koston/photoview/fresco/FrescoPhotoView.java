@@ -20,18 +20,14 @@ import androidx.core.view.GestureDetectorCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager.widget.ViewPager;
-import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
-import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.github.koston.photoview.fresco.page.ImageAdapter;
 import com.github.koston.photoview.fresco.page.ImageBinder;
 import com.github.koston.photoview.fresco.page.ImageModel;
-import com.github.koston.photoview.fresco.utils.AnimationUtils;
 import com.github.koston.photoview.fresco.utils.SystemUIUtils;
 import java.util.List;
 
 public class FrescoPhotoView extends AppCompatActivity
-    implements ImageBinder, OnDismissListener, SwipeToDismissListener.OnViewMoveListener {
+    implements ImageBinder, OnDismissListener, OnViewMoveListener {
 
   private boolean horizontal;
   private boolean showNavigationBar;
@@ -44,34 +40,28 @@ public class FrescoPhotoView extends AppCompatActivity
   private int statusBarColor;
   private int navigationBarColor;
 
+  private boolean scaling;
+  private boolean swipeToDismiss;
+
   private ImageModel[] models;
 
   private PhotoViewRecyclerView rvActivity;
 
-  private ImageAdapter imageAdapter;
   private LinearLayoutManager layoutManager;
 
   private View backgroundView;
+  private ViewGroup dismissContainer;
+
   private SwipeDirectionDetector directionDetector;
   private ScaleGestureDetector scaleDetector;
-  private ViewPager.OnPageChangeListener pageChangeListener;
   private GestureDetectorCompat gestureDetector;
 
-  private ViewGroup dismissContainer;
   private SwipeToDismissListener swipeDismissListener;
-  private View overlayView;
 
   private SwipeDirectionDetector.Direction direction;
 
-  private ImageRequestBuilder customImageRequestBuilder;
-  private GenericDraweeHierarchyBuilder customDraweeHierarchyBuilder;
-
   private boolean wasScaled;
-  private OnDismissListener onDismissListener;
   private boolean isOverlayWasClicked;
-
-  private boolean isZoomingAllowed = true;
-  private boolean isSwipeToDismissAllowed = true;
 
   public static void start(
       Context context,
@@ -80,6 +70,8 @@ public class FrescoPhotoView extends AppCompatActivity
       boolean showStatusBar,
       boolean lightStatusBar,
       boolean lightNavigationBar,
+      boolean scaling,
+      boolean swipeToDismiss,
       int backgroundColor,
       int statusBarColor,
       int navigationBarColor,
@@ -90,6 +82,8 @@ public class FrescoPhotoView extends AppCompatActivity
     starter.putExtra("showStatusBar", showStatusBar);
     starter.putExtra("lightStatusBar", lightStatusBar);
     starter.putExtra("lightNavigationBar", lightNavigationBar);
+    starter.putExtra("scaling", scaling);
+    starter.putExtra("swipeToDismiss", swipeToDismiss);
     starter.putExtra("backgroundColor", backgroundColor);
     starter.putExtra("statusBarColor", statusBarColor);
     starter.putExtra("navigationBarColor", navigationBarColor);
@@ -114,14 +108,11 @@ public class FrescoPhotoView extends AppCompatActivity
             SystemUIUtils.computeSystemUI(
                 lightStatusBar, lightNavigationBar, !showStatusBar, !showNavigationBar));
 
-    backgroundView = getWindow().getDecorView();
-
-    backgroundView = findViewById(R.id.backgroundView);
-    rvActivity = findViewById(R.id.rvActivity);
+    rvActivity = findViewById(R.id.pvrvPhotosViewRecyclerView);
 
     backgroundView.setBackgroundColor(backgroundColor);
-    dismissContainer = findViewById(R.id.container);
-    swipeDismissListener = new SwipeToDismissListener(findViewById(R.id.dismissView), this, this);
+    dismissContainer = findViewById(R.id.flPhotosViewDismissView);
+    swipeDismissListener = new SwipeToDismissListener(dismissContainer, this, this);
     dismissContainer.setOnTouchListener(swipeDismissListener);
 
     directionDetector =
@@ -139,16 +130,6 @@ public class FrescoPhotoView extends AppCompatActivity
         new GestureDetectorCompat(
             this,
             new GestureDetector.SimpleOnGestureListener() {
-              @Override
-              public boolean onDoubleTap(MotionEvent e) {
-                return false;
-              }
-
-              @Override
-              public boolean onDoubleTapEvent(MotionEvent e) {
-                return false;
-              }
-
               @Override
               public boolean onSingleTapConfirmed(MotionEvent e) {
                 onClick(e, isOverlayWasClicked);
@@ -179,6 +160,8 @@ public class FrescoPhotoView extends AppCompatActivity
     outState.putBoolean("showStatusBar", showStatusBar);
     outState.putBoolean("lightStatusBar", lightStatusBar);
     outState.putBoolean("lightNavigationBar", lightNavigationBar);
+    outState.putBoolean("scaling", scaling);
+    outState.putBoolean("swipeToDismiss", swipeToDismiss);
     outState.putInt("backgroundColor", backgroundColor);
     outState.putInt("statusBarColor", statusBarColor);
     outState.putInt("navigationBarColor", navigationBarColor);
@@ -192,6 +175,8 @@ public class FrescoPhotoView extends AppCompatActivity
       showStatusBar = args.getBoolean("showStatusBar");
       lightStatusBar = args.getBoolean("lightStatusBar");
       lightNavigationBar = args.getBoolean("lightNavigationBar");
+      scaling = args.getBoolean("scaling");
+      swipeToDismiss = args.getBoolean("swipeToDismiss");
       backgroundColor = args.getInt("backgroundColor");
       statusBarColor = args.getInt("statusBarColor");
       navigationBarColor = args.getInt("navigationBarColor");
@@ -206,7 +191,7 @@ public class FrescoPhotoView extends AppCompatActivity
   }
 
   private void initRecyclerView(RecyclerView recyclerView) {
-    imageAdapter = new ImageAdapter(this);
+    ImageAdapter imageAdapter = new ImageAdapter(this);
     if (horizontal) {
       layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
     } else {
@@ -228,24 +213,19 @@ public class FrescoPhotoView extends AppCompatActivity
   }
 
   @Override
-  public void onDismiss() {
-    finish();
+  public boolean getScalingEnabled() {
+    return scaling;
   }
 
-  public void setOverlayView(View view) {
-    this.overlayView = view;
-    if (overlayView != null) {
-      dismissContainer.addView(view);
-    }
+  @Override
+  public void onDismiss() {
+    finish();
   }
 
   @Override
   public void onViewMove(float translationY, int translationLimit) {
     float alpha = 1.0f - (1.0f / translationLimit / 4) * Math.abs(translationY);
     backgroundView.setAlpha(alpha);
-    if (overlayView != null) {
-      overlayView.setAlpha(alpha);
-    }
   }
 
   @Override
@@ -271,7 +251,7 @@ public class FrescoPhotoView extends AppCompatActivity
         switch (direction) {
           case UP:
           case DOWN:
-            if (isSwipeToDismissAllowed && !wasScaled) {
+            if (swipeToDismiss && !wasScaled) {
               return swipeDismissListener.onTouch(dismissContainer, event);
             } else {
               break;
@@ -316,16 +296,17 @@ public class FrescoPhotoView extends AppCompatActivity
   }
 
   private void onClick(MotionEvent event, boolean isOverlayWasClicked) {
-    if (overlayView != null && !isOverlayWasClicked) {
+    /*if (overlayView != null && !isOverlayWasClicked) {
       AnimationUtils.animateVisibility(overlayView);
       super.dispatchTouchEvent(event);
-    }
+    }*/
   }
 
   private boolean dispatchOverlayTouch(MotionEvent event) {
-    return overlayView != null
-        && overlayView.getVisibility() == View.VISIBLE
-        && overlayView.dispatchTouchEvent(event);
+    /*return overlayView != null
+    && overlayView.getVisibility() == View.VISIBLE
+    && overlayView.dispatchTouchEvent(event);*/
+    return true;
   }
 
   public static class Builder {
@@ -333,6 +314,9 @@ public class FrescoPhotoView extends AppCompatActivity
     private boolean horizontal = true;
     private boolean showNavigationBar = false;
     private boolean showStatusBar = false;
+
+    private boolean scaling = true;
+    private boolean swipeToDismiss = true;
 
     private boolean lightStatusBar = false;
     private boolean lightNavigationBar = false;
@@ -368,6 +352,16 @@ public class FrescoPhotoView extends AppCompatActivity
 
     public Builder setLightNavigationBar(boolean lightNavigationBar) {
       this.lightNavigationBar = lightNavigationBar;
+      return this;
+    }
+
+    public Builder setScaling(boolean scaling) {
+      this.scaling = scaling;
+      return this;
+    }
+
+    public Builder setSwipeToDismiss(boolean swipeToDismiss) {
+      this.swipeToDismiss = swipeToDismiss;
       return this;
     }
 
@@ -423,6 +417,8 @@ public class FrescoPhotoView extends AppCompatActivity
           showStatusBar,
           lightStatusBar,
           lightNavigationBar,
+          scaling,
+          swipeToDismiss,
           backgroundColor,
           statusBarColor,
           navigationBarColor,

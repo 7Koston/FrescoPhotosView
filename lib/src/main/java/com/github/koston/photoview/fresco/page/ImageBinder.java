@@ -5,4 +5,6 @@ public interface ImageBinder {
   int getItemCount();
 
   ImageModel getModelAtPosition(int position);
+
+  boolean getScalingEnabled();
 }

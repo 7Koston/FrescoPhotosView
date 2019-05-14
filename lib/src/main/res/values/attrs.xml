@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <declare-styleable name="PhotosView">
+    <attr format="enum" name="orientation">
+      <enum name="horizontal" value="0"/>
+      <enum name="vertical" value="1"/>
+    </attr>
+    <attr format="boolean" name="enableScaling"/>
+    <attr format="boolean" name="enableFlingScroll"/>
+    <attr format="boolean" name="enableSwipeToDismiss"/>
+    <attr format="boolean" name="enableBackgroundFade"/>
+  </declare-styleable>
+</resources>

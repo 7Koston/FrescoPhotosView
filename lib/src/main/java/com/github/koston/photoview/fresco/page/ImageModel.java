@@ -47,6 +47,10 @@ public class ImageModel implements Parcelable {
     return uri;
   }
 
+  public void setUri(Uri uri) {
+    this.uri = uri;
+  }
+
   public boolean isScaled() {
     return scaled;
   }
