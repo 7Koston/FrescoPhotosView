@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Parcelable;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -129,6 +130,17 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
       return true;
     }
     return super.dispatchTouchEvent(event);
+  }
+
+  @Nullable
+  @Override
+  protected Parcelable onSaveInstanceState() {
+    return super.onSaveInstanceState();
+  }
+
+  @Override
+  protected void onRestoreInstanceState(Parcelable state) {
+    super.onRestoreInstanceState(state);
   }
 
   private void onUpDownEvent(MotionEvent event) {

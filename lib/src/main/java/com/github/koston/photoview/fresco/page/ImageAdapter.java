@@ -4,6 +4,7 @@ import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+import com.github.koston.photoview.fresco.CircleProgressBarDrawable;
 import com.github.koston.photoview.fresco.R;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageViewHolder> {
@@ -24,6 +25,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageViewHolder> {
   @Override
   public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
     holder.pdvPage.setEnabled(imageBinder.getScalingEnabled());
+    holder.pdvPage.getHierarchy().setProgressBarImage(new CircleProgressBarDrawable());
     holder.pdvPage.setPhotoUri(imageBinder.getModelAtPosition(position).getUri());
     holder.pdvPage.setScale(0.1f);
     holder.pdvPage.setOnScaleChangeListener(
