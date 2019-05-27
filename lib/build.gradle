@@ -37,7 +37,4 @@ dependencies {
     implementation deps.androidx.appcompat
     implementation deps.androidx.recyclerview
     implementation deps.fresco.fresco
-    implementation deps.fresco.animatedwebp
-    implementation deps.fresco.webpsupport
-    implementation deps.fresco.imagepipelineokhttp3
 }

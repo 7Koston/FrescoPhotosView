@@ -6,7 +6,7 @@ android {
     compileSdkVersion buildConfig.compileSdk
 
     defaultConfig {
-        applicationId "com.github.koston.photoview.fresco"
+        applicationId "com.github.koston.photosview"
         minSdkVersion buildConfig.minSdk
         targetSdkVersion buildConfig.targetSdk
         versionCode 1
@@ -38,15 +38,18 @@ dependencies {
     implementation deps.androidx.appcompat
     implementation deps.androidx.recyclerview
     implementation deps.fresco.fresco
-    implementation deps.fresco.animatedwebp
-    implementation deps.fresco.webpsupport
-    implementation deps.fresco.imagepipelineokhttp3
     implementation project(':lib')
 
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation "com.google.android.material:material:1.1.0-alpha06"
-    implementation "com.squareup.okhttp3:logging-interceptor:$okHttp3"
+
+    implementation "com.facebook.fresco:imagepipeline-okhttp3:${versions.fresco}"
+    implementation "com.facebook.fresco:webpsupport:${versions.fresco}"
+    implementation "com.facebook.fresco:animated-webp:${versions.fresco}"
+
+
     implementation "com.squareup.okhttp3:okhttp:$okHttp3"
+    debugImplementation "com.squareup.okhttp3:logging-interceptor:$okHttp3"
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.1.1'

@@ -16,10 +16,7 @@ buildscript {
                     'recyclerview': "androidx.recyclerview:recyclerview:${versions.recyclerview}",
             ],
             'fresco'  : [
-                    'fresco'              : "com.facebook.fresco:fresco:${versions.fresco}",
-                    'animatedwebp'        : "com.facebook.fresco:animated-webp:${versions.fresco}",
-                    'webpsupport'         : "com.facebook.fresco:webpsupport:${versions.fresco}",
-                    'imagepipelineokhttp3': "com.facebook.fresco:imagepipeline-okhttp3:${versions.fresco}"
+                    'fresco': "com.facebook.fresco:fresco:${versions.fresco}"
             ]
     ]
 
