@@ -29,6 +29,8 @@ public interface ImageBinder {
 
   boolean getScalingEnabled();
 
+  void onScalingChange(int position, float scale);
+
   @IdRes
   int getPageViewId();
 

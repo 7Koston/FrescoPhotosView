@@ -56,6 +56,11 @@ class SwipeToDismissListener implements View.OnTouchListener {
         return true;
       case MotionEvent.ACTION_UP:
         v.performClick();
+        if (tracking) {
+          tracking = false;
+          animateSwipeView(v.getHeight());
+        }
+        return true;
       case MotionEvent.ACTION_CANCEL:
         if (tracking) {
           tracking = false;

@@ -32,7 +32,6 @@ public class SimpleActivity extends AppCompatActivity {
     pvSimple.setScaling(true);
     pvSimple.setSwipeToDismiss(true);
     pvSimple.setBackgroundColor(Color.BLACK);
-    pvSimple.setPageLayout(R.layout.custom_page, R.id.pdvCustomPage);
     pvSimple.setDraweeHierarchyBuilder(
         GenericDraweeHierarchyBuilder.newInstance(getResources())
             .setProgressBarImage(new CircleProgressBarDrawable()));

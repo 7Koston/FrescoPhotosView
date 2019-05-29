@@ -50,26 +50,29 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageViewHolder> {
     if (hierarchy != null) {
       holder.pdvPage.setHierarchy(hierarchy.build());
     }
-
+    holder.pdvPage.setScale(1f);
+    imageBinder.onScalingChange(position, 1f);
     holder.pdvPage.setEnabled(imageBinder.getScalingEnabled());
-    holder.pdvPage.setPhotoUri(imageBinder.getModelAtPosition(position).getUri());
-    holder.pdvPage.setScale(0.1f);
+    holder.pdvPage.setImageURI(imageBinder.getModelAtPosition(position).getUri());
     holder.pdvPage.setOnScaleChangeListener(
-        (scaleFactor, scale, focusX, focusY) -> {
-          if (scaleFactor > 1.0f) {
-            if (scale >= 1.0f) {
-              imageBinder.getModelAtPosition(position).setScaled(true);
-            } else {
-              imageBinder.getModelAtPosition(position).setScaled(false);
-            }
-          } else {
-            if (scale <= 1.0f) {
-              imageBinder.getModelAtPosition(position).setScaled(true);
-            } else {
-              imageBinder.getModelAtPosition(position).setScaled(false);
-            }
-          }
-        });
+        (scaleFactor, focusX, focusY) -> imageBinder.onScalingChange(position, scaleFactor));
+    // holder.pdvPage.setScale(0.1f);
+    /*    holder.pdvPage.setOnScaleChangeListener(
+    (scaleFactor, scale, focusX, focusY) -> {
+      if (scaleFactor > 1.0f) {
+        if (scale >= 1.0f) {
+          imageBinder.getModelAtPosition(position).setScaled(true);
+        } else {
+          imageBinder.getModelAtPosition(position).setScaled(false);
+        }
+      } else {
+        if (scale <= 1.0f) {
+          imageBinder.getModelAtPosition(position).setScaled(true);
+        } else {
+          imageBinder.getModelAtPosition(position).setScaled(true);
+        }
+      }
+    });*/
   }
 
   @Override

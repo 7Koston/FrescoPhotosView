@@ -21,16 +21,13 @@ import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
-import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.FrameLayout;
 import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.view.GestureDetectorCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -53,20 +50,17 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
   private ImageAdapter adapter;
   private LinearLayoutManager layoutManager;
 
-  private PhotoViewRecyclerView recyclerView;
+  private RecyclerViewViewPager recyclerView;
   private FrameLayout dismissView;
 
   private SwipeDirectionDetector directionDetector;
-  private ScaleGestureDetector scaleDetector;
-  private GestureDetectorCompat gestureDetector;
+  private SwipeDirectionDetector.Direction direction;
 
   private OnDismissListener dismissListener;
   private OnViewMoveListener moveListener;
-
   private SwipeToDismissListener swipeDismissListener;
-  private SwipeDirectionDetector.Direction direction;
 
-  private boolean wasScaled;
+  private float currentPosScale;
 
   private PagerSnapHelper snapHelper;
 
@@ -100,36 +94,23 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
   @Override
   public void setOnClickListener(@Nullable View.OnClickListener l) {
     View view = this;
-    gestureDetector =
-        new GestureDetectorCompat(
-            this.getContext(),
-            new GestureDetector.SimpleOnGestureListener() {
-              @Override
-              public boolean onSingleTapConfirmed(MotionEvent e) {
-                if (l != null) {
-                  l.onClick(view);
-                  return true;
-                }
-                return super.onSingleTapConfirmed(e);
-              }
-            });
+    /*    gestureDetector =
+    new GestureDetectorCompat(
+        this.getContext(),
+        new GestureDetector.SimpleOnGestureListener() {
+          @Override
+          public boolean onSingleTapConfirmed(MotionEvent e) {
+            if (l != null) {
+              l.onClick(view);
+              return true;
+            }
+            return super.onSingleTapConfirmed(e);
+          }
+        });*/
   }
 
   public void setOnClickListener(@Nullable OnClickListener l) {
     View view = this;
-    gestureDetector =
-        new GestureDetectorCompat(
-            this.getContext(),
-            new GestureDetector.SimpleOnGestureListener() {
-              @Override
-              public boolean onSingleTapConfirmed(MotionEvent e) {
-                if (l != null) {
-                  l.onClick(view, e.getX(), e.getY());
-                  return true;
-                }
-                return super.onSingleTapConfirmed(e);
-              }
-            });
   }
 
   @Override
@@ -150,36 +131,23 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
   public boolean dispatchTouchEvent(MotionEvent event) {
     onUpDownEvent(event);
 
-    if (direction == null) {
-      if (scaleDetector.isInProgress() || event.getPointerCount() > 1) {
-        wasScaled = true;
-        return recyclerView.dispatchTouchEvent(event);
-      }
-    }
-
-    int curPos = layoutManager.findFirstVisibleItemPosition();
-    for (int i = 0; i < adapter.getItemCount(); i++) {
-      if (i != curPos) {
-        items.get(i).setScaled(false);
-      }
-    }
-    if (curPos != -1 && !items.get(curPos).isScaled()) {
+    if (!recyclerView.isScaling() && !recyclerView.isMultitouch()) {
       directionDetector.onTouchEvent(event);
       if (direction != null) {
         switch (direction) {
           case UP:
           case DOWN:
-            if (swipeToDismiss && !wasScaled) {
+            if (swipeToDismiss && currentPosScale == 1f)
               return swipeDismissListener.onTouch(dismissView, event);
-            } else {
+            else {
               break;
             }
-          case LEFT:
+/*          case LEFT:
           case RIGHT:
-            return recyclerView.dispatchTouchEvent(event);
+            if (currentPosScale == 1f) return recyclerView.dispatchTouchEvent(event);
+            else break;*/
         }
       }
-      return true;
     }
     return super.dispatchTouchEvent(event);
   }
@@ -191,25 +159,15 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
     if (event.getAction() == MotionEvent.ACTION_DOWN) {
       onActionDown(event);
     }
-
-    scaleDetector.onTouchEvent(event);
-    if (gestureDetector != null) {
-      gestureDetector.onTouchEvent(event);
-    }
   }
 
   private void onActionDown(MotionEvent event) {
-    direction = null;
-    wasScaled = false;
-    recyclerView.dispatchTouchEvent(event);
+    //recyclerView.dispatchTouchEvent(event);
     swipeDismissListener.onTouch(dismissView, event);
   }
 
   private void onActionUp(MotionEvent event) {
     swipeDismissListener.onTouch(dismissView, event);
-    if (!recyclerView.isScrolled()) {
-      recyclerView.dispatchTouchEvent(event);
-    }
   }
 
   private void init(Context context, AttributeSet attrs) {
@@ -218,6 +176,7 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
     swipeToDismiss = false;
     scaling = false;
     backgroundFade = false;
+    currentPosScale = 1f;
     if (attrs != null) {
       TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.PhotosView);
       flingScroll = ta.getBoolean(R.styleable.PhotosView_enableFlingScroll, false);
@@ -242,9 +201,6 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
             direction = dir;
           }
         };
-
-    scaleDetector =
-        new ScaleGestureDetector(context, new ScaleGestureDetector.SimpleOnScaleGestureListener());
   }
 
   public void setFlingScroll(boolean flingScroll) {
@@ -308,35 +264,36 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
   }
 
   public void addItem(Uri uri) {
-    if (items != null && adapter != null) {
+    if (items == null) {
+      items = new ArrayList<>();
+    }
+    if (adapter != null) {
       items.add(new ImageModel(uri));
       adapter.notifyItemInserted(items.size() - 1);
     }
   }
 
   public void addAll(Uri... uris) {
-    if (items != null) {
-      for (Uri uri : uris) {
-        items.add(new ImageModel(uri));
-      }
-      if (adapter != null) {
-        adapter.notifyItemRangeChanged(items.size(), uris.length);
-      }
-    } else {
-      setItems(uris);
+    if (items == null) {
+      items = new ArrayList<>();
+    }
+    for (Uri uri : uris) {
+      items.add(new ImageModel(uri));
+    }
+    if (adapter != null) {
+      adapter.notifyItemRangeChanged(items.size(), uris.length);
     }
   }
 
   public void addAll(List<Uri> uris) {
-    if (items != null) {
-      for (Uri uri : uris) {
-        items.add(new ImageModel(uri));
-      }
-      if (adapter != null) {
-        adapter.notifyItemRangeChanged(items.size(), uris.size());
-      }
-    } else {
-      setItems(uris);
+    if (items == null) {
+      items = new ArrayList<>();
+    }
+    for (Uri uri : uris) {
+      items.add(new ImageModel(uri));
+    }
+    if (adapter != null) {
+      adapter.notifyItemRangeChanged(items.size(), uris.size());
     }
   }
 
@@ -409,6 +366,11 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
   @Override
   public boolean getScalingEnabled() {
     return scaling;
+  }
+
+  @Override
+  public void onScalingChange(int position, float scale) {
+    currentPosScale = scale;
   }
 
   @Override

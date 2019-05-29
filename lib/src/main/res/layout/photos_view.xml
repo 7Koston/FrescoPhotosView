@@ -9,7 +9,7 @@
     android:layout_height="match_parent"
     tools:ignore="UselessParent">
 
-    <com.github.koston.photosview.PhotoViewRecyclerView
+    <com.github.koston.photosview.RecyclerViewViewPager
       android:id="@+id/pvrvPhotosViewRecyclerView"
       android:layout_width="match_parent"
       android:layout_height="match_parent"/>

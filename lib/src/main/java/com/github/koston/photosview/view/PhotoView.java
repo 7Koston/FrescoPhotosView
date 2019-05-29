@@ -1,79 +1,62 @@
 /*
- * Copyright 2019 7Koston
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ Copyright 2011, 2012 Chris Banes.
+ <p>
+ Licensed under the Apache License, Version 2.0 (the "License");
+ you may not use this file except in compliance with the License.
+ You may obtain a copy of the License at
+ <p>
+ http://www.apache.org/licenses/LICENSE-2.0
+ <p>
+ Unless required by applicable law or agreed to in writing, software
+ distributed under the License is distributed on an "AS IS" BASIS,
+ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ See the License for the specific language governing permissions and
+ limitations under the License.
  */
-
 package com.github.koston.photosview.view;
 
 import android.content.Context;
-import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
-import android.view.View;
-import android.widget.ImageView;
-import com.facebook.drawee.drawable.ScalingUtils;
-import com.facebook.drawee.view.SimpleDraweeView;
+import androidx.appcompat.widget.AppCompatImageView;
 
 /**
- * ***************************************************************************** Description: Create
- * PhotoDraweeView to support Fresco.
- *
- * <p>Compare to PhotoView, just added onDraw and used PhotoViewAttacher.
- *
- * <p>Author: Freeman
- *
- * <p>Date: 2018/9/7 *****************************************************************************
+ * A zoomable ImageView. See {@link PhotoViewAttacher} for most of the details on how the zooming is
+ * accomplished
  */
-public class PhotoDraweeView extends SimpleDraweeView {
+@SuppressWarnings("unused")
+public class PhotoView extends AppCompatImageView {
 
   private PhotoViewAttacher attacher;
-  private ImageView.ScaleType pendingScaleType;
+  private ScaleType pendingScaleType;
 
-  public PhotoDraweeView(Context context) {
+  public PhotoView(Context context) {
     this(context, null);
   }
 
-  public PhotoDraweeView(Context context, AttributeSet attr) {
+  public PhotoView(Context context, AttributeSet attr) {
     this(context, attr, 0);
   }
 
-  public PhotoDraweeView(Context context, AttributeSet attr, int defStyle) {
+  public PhotoView(Context context, AttributeSet attr, int defStyle) {
     super(context, attr, defStyle);
     init();
   }
 
   private void init() {
-    attacher = new DraweeViewAttacher(this);
-    getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
-    // We always pose as a Matrix scale type, though we can change to another scale type
-    // via the attacher
-    super.setScaleType(ImageView.ScaleType.MATRIX);
-    // apply the previously applied scale type
+    attacher = new PhotoViewAttacher(this);
+    //We always pose as a Matrix scale type, though we can change to another scale type
+    //via the attacher
+    super.setScaleType(ScaleType.MATRIX);
+    //apply the previously applied scale type
     if (pendingScaleType != null) {
       setScaleType(pendingScaleType);
       pendingScaleType = null;
     }
-  }
-
-  @Override
-  protected void onDraw(Canvas canvas) {
-    canvas.concat(attacher.getImageMatrix());
-    super.onDraw(canvas);
   }
 
   /**
@@ -88,12 +71,12 @@ public class PhotoDraweeView extends SimpleDraweeView {
   }
 
   @Override
-  public ImageView.ScaleType getScaleType() {
+  public ScaleType getScaleType() {
     return attacher.getScaleType();
   }
 
   @Override
-  public void setScaleType(ImageView.ScaleType scaleType) {
+  public void setScaleType(ScaleType scaleType) {
     if (attacher == null) {
       pendingScaleType = scaleType;
     } else {
@@ -107,16 +90,15 @@ public class PhotoDraweeView extends SimpleDraweeView {
   }
 
   @Override
-  public void setOnLongClickListener(View.OnLongClickListener l) {
+  public void setOnLongClickListener(OnLongClickListener l) {
     attacher.setOnLongClickListener(l);
   }
 
   @Override
-  public void setOnClickListener(View.OnClickListener l) {
+  public void setOnClickListener(OnClickListener l) {
     attacher.setOnClickListener(l);
   }
 
-  @SuppressWarnings("deprecation")
   @Override
   public void setImageDrawable(Drawable drawable) {
     super.setImageDrawable(drawable);
@@ -159,12 +141,6 @@ public class PhotoDraweeView extends SimpleDraweeView {
     attacher.setRotationBy(rotationDegree);
   }
 
-  @SuppressWarnings("deprecation")
-  @Deprecated
-  public boolean isZoomEnabled() {
-    return attacher.isZoomEnabled();
-  }
-
   public boolean isZoomable() {
     return attacher.isZoomable();
   }
@@ -181,6 +157,7 @@ public class PhotoDraweeView extends SimpleDraweeView {
     attacher.getDisplayMatrix(matrix);
   }
 
+  @SuppressWarnings("UnusedReturnValue")
   public boolean setDisplayMatrix(Matrix finalRectangle) {
     return attacher.setDisplayMatrix(finalRectangle);
   }
