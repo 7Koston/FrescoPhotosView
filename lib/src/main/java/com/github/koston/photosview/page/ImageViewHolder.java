@@ -22,9 +22,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 import com.github.koston.photosview.view.PhotoDraweeView;
 
-class ImageViewHolder extends ViewHolder {
+public class ImageViewHolder extends ViewHolder {
 
-  final PhotoDraweeView pdvPage;
+  public final PhotoDraweeView pdvPage;
 
   ImageViewHolder(@NonNull View view, @IdRes int id) {
     super(view);

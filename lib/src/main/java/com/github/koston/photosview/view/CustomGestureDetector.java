@@ -1,18 +1,20 @@
 /*
- Copyright 2011, 2012 Chris Banes.
- <p/>
- Licensed under the Apache License, Version 2.0 (the "License");
- you may not use this file except in compliance with the License.
- You may obtain a copy of the License at
- <p/>
- http://www.apache.org/licenses/LICENSE-2.0
- <p/>
- Unless required by applicable law or agreed to in writing, software
- distributed under the License is distributed on an "AS IS" BASIS,
- WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- See the License for the specific language governing permissions and
- limitations under the License.
+ * Copyright 2018 Chris Banes
+ * Copyright 2018 bosphere
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
  */
+
 package com.github.koston.photosview.view;
 
 import android.content.Context;
@@ -27,65 +29,80 @@ import android.view.ViewConfiguration;
 class CustomGestureDetector {
 
   private static final int INVALID_POINTER_ID = -1;
-  private final ScaleGestureDetector mDetector;
+  private static final int INVALID_INDEX = -1;
   private final float mTouchSlop;
-  private final float mMinimumVelocity;
-  private int mActivePointerId = INVALID_POINTER_ID;
-  private int mActivePointerIndex = 0;
+
+  private final ScaleGestureDetector mDetector;
+
   private VelocityTracker mVelocityTracker;
   private boolean mIsDragging;
   private float mLastTouchX;
   private float mLastTouchY;
+  private final float mMinimumVelocity;
+  private int mActivePointerId = INVALID_POINTER_ID;
   private OnGestureListener mListener;
 
   CustomGestureDetector(Context context, OnGestureListener listener) {
-    final ViewConfiguration configuration = ViewConfiguration
-        .get(context);
+    final ViewConfiguration configuration = ViewConfiguration.get(context);
     mMinimumVelocity = configuration.getScaledMinimumFlingVelocity();
     mTouchSlop = configuration.getScaledTouchSlop();
 
     mListener = listener;
-    ScaleGestureDetector.OnScaleGestureListener mScaleListener = new ScaleGestureDetector.OnScaleGestureListener() {
+    ScaleGestureDetector.OnScaleGestureListener mScaleListener =
+        new ScaleGestureDetector.OnScaleGestureListener() {
 
-      @Override
-      public boolean onScale(ScaleGestureDetector detector) {
-        float scaleFactor = detector.getScaleFactor();
+          @Override
+          public boolean onScale(ScaleGestureDetector detector) {
+            float scaleFactor = detector.getScaleFactor();
 
-        if (Float.isNaN(scaleFactor) || Float.isInfinite(scaleFactor)) {
-          return false;
-        }
+            if (Float.isNaN(scaleFactor) || Float.isInfinite(scaleFactor)) {
+              return false;
+            }
 
-        if (scaleFactor >= 0) {
-          mListener.onScale(scaleFactor,
-              detector.getFocusX(), detector.getFocusY());
-        }
-        return true;
-      }
+            mListener.onScale(scaleFactor, detector.getFocusX(), detector.getFocusY());
+            return true;
+          }
 
-      @Override
-      public boolean onScaleBegin(ScaleGestureDetector detector) {
-        return true;
-      }
+          @Override
+          public boolean onScaleBegin(ScaleGestureDetector detector) {
+            return true;
+          }
 
-      @Override
-      public void onScaleEnd(ScaleGestureDetector detector) {
-        // NO-OP
-      }
-    };
+          @Override
+          public void onScaleEnd(ScaleGestureDetector detector) {
+            // NO-OP
+          }
+        };
     mDetector = new ScaleGestureDetector(context, mScaleListener);
   }
 
+  private int getActivePointerIndex(MotionEvent ev) {
+    return mActivePointerId == INVALID_POINTER_ID
+        ? INVALID_INDEX
+        : ev.findPointerIndex(mActivePointerId);
+  }
+
   private float getActiveX(MotionEvent ev) {
+    int index = getActivePointerIndex(ev);
+    if (index == INVALID_INDEX) {
+      return ev.getX();
+    }
+
     try {
-      return ev.getX(mActivePointerIndex);
+      return ev.getX(index);
     } catch (Exception e) {
       return ev.getX();
     }
   }
 
   private float getActiveY(MotionEvent ev) {
+    int index = getActivePointerIndex(ev);
+    if (index == INVALID_INDEX) {
+      return ev.getY();
+    }
+
     try {
-      return ev.getY(mActivePointerIndex);
+      return ev.getY(index);
     } catch (Exception e) {
       return ev.getY();
     }
@@ -154,7 +171,6 @@ class CustomGestureDetector {
         }
         break;
       case MotionEvent.ACTION_UP:
-        mActivePointerId = INVALID_POINTER_ID;
         if (mIsDragging) {
           if (null != mVelocityTracker) {
             mLastTouchX = getActiveX(ev);
@@ -164,17 +180,17 @@ class CustomGestureDetector {
             mVelocityTracker.addMovement(ev);
             mVelocityTracker.computeCurrentVelocity(1000);
 
-            final float vX = mVelocityTracker.getXVelocity(), vY = mVelocityTracker
-                .getYVelocity();
+            final float vX = mVelocityTracker.getXVelocity(), vY = mVelocityTracker.getYVelocity();
 
             // If the velocity is greater than minVelocity, call
             // listener
             if (Math.max(Math.abs(vX), Math.abs(vY)) >= mMinimumVelocity) {
-              mListener.onFling(mLastTouchX, mLastTouchY, -vX,
-                  -vY);
+              mListener.onFling(mLastTouchX, mLastTouchY, -vX, -vY);
             }
           }
         }
+
+        mActivePointerId = INVALID_POINTER_ID;
 
         // Recycle Velocity Tracker
         if (null != mVelocityTracker) {
@@ -195,10 +211,6 @@ class CustomGestureDetector {
         }
         break;
     }
-
-    mActivePointerIndex = ev
-        .findPointerIndex(mActivePointerId != INVALID_POINTER_ID ? mActivePointerId
-            : 0);
     return true;
   }
 }

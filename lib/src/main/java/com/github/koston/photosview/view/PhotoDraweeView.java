@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 7Koston
+ * Copyright 2018 Freeman
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,16 +29,6 @@ import android.widget.ImageView;
 import com.facebook.drawee.drawable.ScalingUtils;
 import com.facebook.drawee.view.SimpleDraweeView;
 
-/**
- * ***************************************************************************** Description: Create
- * PhotoDraweeView to support Fresco.
- *
- * <p>Compare to PhotoView, just added onDraw and used PhotoViewAttacher.
- *
- * <p>Author: Freeman
- *
- * <p>Date: 2018/9/7 *****************************************************************************
- */
 public class PhotoDraweeView extends SimpleDraweeView {
 
   private PhotoViewAttacher attacher;
@@ -251,6 +241,10 @@ public class PhotoDraweeView extends SimpleDraweeView {
 
   public void setOnViewDragListener(OnViewDragListener listener) {
     attacher.setOnViewDragListener(listener);
+  }
+
+  public void setOnScaleStateListener(OnScaleStateListener listener) {
+    attacher.setOnScaleStateListener(listener);
   }
 
   public void setScale(float scale, boolean animate) {

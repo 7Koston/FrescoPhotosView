@@ -1,5 +1,5 @@
 /*
- * Copyright 2018 Chris Banes
+ * Copyright 2018 7Koston
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,13 +14,10 @@
  * limitations under the License.
  */
 
+//DELETE IT
 package com.github.koston.photosview.view;
 
-import android.view.View;
+public interface OnScaleStateListener {
 
-class Compat {
-
-  static void postOnAnimation(View view, Runnable runnable) {
-    view.postOnAnimation(runnable);
-  }
+  void onScaleStateChange(int state);
 }

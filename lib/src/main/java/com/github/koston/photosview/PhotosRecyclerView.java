@@ -23,23 +23,23 @@ import android.view.ScaleGestureDetector;
 import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class RecyclerViewViewPager extends RecyclerView {
+public class PhotosRecyclerView extends RecyclerView {
 
   private ScaleGestureDetector gestureDetector;
 
   private boolean isScaling, isMultitouch;
 
-  public RecyclerViewViewPager(Context context) {
+  public PhotosRecyclerView(Context context) {
     super(context);
     init(context);
   }
 
-  public RecyclerViewViewPager(Context context, @Nullable AttributeSet attrs) {
+  public PhotosRecyclerView(Context context, @Nullable AttributeSet attrs) {
     super(context, attrs);
     init(context);
   }
 
-  public RecyclerViewViewPager(Context context, @Nullable AttributeSet attrs, int defStyle) {
+  public PhotosRecyclerView(Context context, @Nullable AttributeSet attrs, int defStyle) {
     super(context, attrs, defStyle);
     init(context);
   }

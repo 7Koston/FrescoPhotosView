@@ -1,5 +1,5 @@
 /*
- * Copyright 2019 7Koston
+ * Copyright 2018 Freeman
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,13 +20,6 @@ import android.graphics.Matrix;
 import android.graphics.RectF;
 import com.facebook.drawee.view.GenericDraweeView;
 
-/*******************************************************************************
- * Description: Extend PhotoViewAttacher to support Fresco.
- *
- * Author: Freeman
- *
- * Date: 2018/9/7
- *******************************************************************************/
 public class DraweeViewAttacher extends PhotoViewAttacher {
 
   private GenericDraweeView imageView;

@@ -37,6 +37,7 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.github.koston.photosview.page.ImageAdapter;
 import com.github.koston.photosview.page.ImageBinder;
 import com.github.koston.photosview.page.ImageModel;
+import com.github.koston.photosview.page.ImageViewHolder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -50,7 +51,7 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
   private ImageAdapter adapter;
   private LinearLayoutManager layoutManager;
 
-  private RecyclerViewViewPager recyclerView;
+  private PhotosRecyclerView recyclerView;
   private FrameLayout dismissView;
 
   private SwipeDirectionDetector directionDetector;
@@ -60,7 +61,7 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
   private OnViewMoveListener moveListener;
   private SwipeToDismissListener swipeDismissListener;
 
-  private float currentPosScale;
+  private int currentPosScale;
 
   private PagerSnapHelper snapHelper;
 
@@ -129,23 +130,25 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
 
   @Override
   public boolean dispatchTouchEvent(MotionEvent event) {
-    onUpDownEvent(event);
-
     if (!recyclerView.isScaling() && !recyclerView.isMultitouch()) {
       directionDetector.onTouchEvent(event);
       if (direction != null) {
+        onUpDownEvent(event);
+        // swipeDismissListener.onTouch(dismissView, event);
         switch (direction) {
           case UP:
           case DOWN:
-            if (swipeToDismiss && currentPosScale == 1f)
-              return swipeDismissListener.onTouch(dismissView, event);
-            else {
+            if (swipeToDismiss) {
+              ImageViewHolder holder =
+                  (ImageViewHolder)
+                      recyclerView.findViewHolderForLayoutPosition(
+                          layoutManager.findFirstVisibleItemPosition());
+              if (holder.pdvPage.getScale() == 1f) {
+                return swipeDismissListener.onTouch(dismissView, event);
+              }
+            } else {
               break;
             }
-/*          case LEFT:
-          case RIGHT:
-            if (currentPosScale == 1f) return recyclerView.dispatchTouchEvent(event);
-            else break;*/
         }
       }
     }
@@ -162,7 +165,6 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
   }
 
   private void onActionDown(MotionEvent event) {
-    //recyclerView.dispatchTouchEvent(event);
     swipeDismissListener.onTouch(dismissView, event);
   }
 
@@ -176,7 +178,7 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
     swipeToDismiss = false;
     scaling = false;
     backgroundFade = false;
-    currentPosScale = 1f;
+    currentPosScale = 1;
     if (attrs != null) {
       TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.PhotosView);
       flingScroll = ta.getBoolean(R.styleable.PhotosView_enableFlingScroll, false);
@@ -369,7 +371,7 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
   }
 
   @Override
-  public void onScalingChange(int position, float scale) {
+  public void onScalingChange(int position, int scale) {
     currentPosScale = scale;
   }
 
