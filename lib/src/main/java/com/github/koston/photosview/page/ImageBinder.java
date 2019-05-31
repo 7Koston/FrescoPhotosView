@@ -23,19 +23,17 @@ import com.facebook.imagepipeline.request.ImageRequestBuilder;
 
 public interface ImageBinder {
 
-  int getItemCount();
-
-  ImageModel getModelAtPosition(int position);
-
-  boolean getScalingEnabled();
-
-  void onScalingChange(int position, int scale);
-
   @IdRes
   int getPageViewId();
 
   @LayoutRes
   int getPageLayout();
+
+  int getItemCount();
+
+  ImageModel getModelAtPosition(int position);
+
+  boolean getScalingEnabled();
 
   ImageRequestBuilder getImageRequestBuilder();
 

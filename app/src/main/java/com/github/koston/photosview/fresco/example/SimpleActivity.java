@@ -28,9 +28,9 @@ public class SimpleActivity extends AppCompatActivity {
         Uri.parse("https://novel.tl/images/thumb/8/85/NGNL_v01_a.jpg/720px-NGNL_v01_a.jpg"));
 
     pvSimple.setFlingScroll(false);
-    pvSimple.setBackgroundFade(true);
+    pvSimple.setBackgroundFade(false);
     pvSimple.setScaling(true);
-    pvSimple.setSwipeToDismiss(true);
+    pvSimple.setSwipeToDismiss(false);
     pvSimple.setBackgroundColor(Color.BLACK);
     pvSimple.setDraweeHierarchyBuilder(
         GenericDraweeHierarchyBuilder.newInstance(getResources())

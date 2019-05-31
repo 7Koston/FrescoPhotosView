@@ -243,10 +243,6 @@ public class PhotoDraweeView extends SimpleDraweeView {
     attacher.setOnViewDragListener(listener);
   }
 
-  public void setOnScaleStateListener(OnScaleStateListener listener) {
-    attacher.setOnScaleStateListener(listener);
-  }
-
   public void setScale(float scale, boolean animate) {
     attacher.setScale(scale, animate);
   }

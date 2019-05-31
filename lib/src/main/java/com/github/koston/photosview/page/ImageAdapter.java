@@ -52,8 +52,6 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageViewHolder> {
     }
     holder.pdvPage.setEnabled(imageBinder.getScalingEnabled());
     holder.pdvPage.setImageURI(imageBinder.getModelAtPosition(position).getUri());
-    holder.pdvPage.setOnScaleStateListener(
-        (scaleFactor) -> imageBinder.onScalingChange(position, scaleFactor));
   }
 
   @Override

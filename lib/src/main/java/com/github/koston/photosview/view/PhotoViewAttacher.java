@@ -49,10 +49,6 @@ public class PhotoViewAttacher implements View.OnTouchListener, View.OnLayoutCha
   private static final int VERTICAL_EDGE_BOTTOM = 1;
   private static final int VERTICAL_EDGE_BOTH = 2;
 
-  public static final int MAX_SCALED = 2;
-  public static final int NOT_SCALED = 1;
-  public static final int SCALED = 0;
-
   private static float DEFAULT_MAX_SCALE = 3.0f;
   private static float DEFAULT_MID_SCALE = 1.75f;
   private static float DEFAULT_MIN_SCALE = 1.0f;
@@ -85,7 +81,6 @@ public class PhotoViewAttacher implements View.OnTouchListener, View.OnLayoutCha
   private OnScaleChangedListener mScaleChangeListener;
   private OnSingleFlingListener mSingleFlingListener;
   private OnViewDragListener mOnViewDragListener;
-  private OnScaleStateListener mOnScaleStateListener;
 
   private FlingRunnable mCurrentFlingRunnable;
   private int mHorizontalScrollEdge = HORIZONTAL_EDGE_BOTH;
@@ -153,9 +148,6 @@ public class PhotoViewAttacher implements View.OnTouchListener, View.OnLayoutCha
           if (getScale() < mMaxScale || scaleFactor < 1f) {
             if (mScaleChangeListener != null) {
               mScaleChangeListener.onScaleChange(scaleFactor, focusX, focusY);
-            }
-            if (mOnScaleStateListener != null) {
-              mOnScaleStateListener.onScaleStateChange(SCALED);
             }
             mSuppMatrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
             checkAndDisplayMatrix();
@@ -397,9 +389,6 @@ public class PhotoViewAttacher implements View.OnTouchListener, View.OnLayoutCha
           // If the user has zoomed less than min scale, zoom back
           // to min scale
           if (getScale() < mMinScale) {
-            if (mOnScaleStateListener != null) {
-              mOnScaleStateListener.onScaleStateChange(NOT_SCALED);
-            }
             RectF rect = getDisplayRect();
             if (rect != null) {
               v.post(
@@ -407,9 +396,6 @@ public class PhotoViewAttacher implements View.OnTouchListener, View.OnLayoutCha
               handled = true;
             }
           } else if (getScale() > mMaxScale) {
-            if (mOnScaleStateListener != null) {
-              mOnScaleStateListener.onScaleStateChange(MAX_SCALED);
-            }
             RectF rect = getDisplayRect();
             if (rect != null) {
               v.post(
@@ -473,10 +459,6 @@ public class PhotoViewAttacher implements View.OnTouchListener, View.OnLayoutCha
 
   public void setOnViewDragListener(OnViewDragListener listener) {
     mOnViewDragListener = listener;
-  }
-
-  public void setOnScaleStateListener(OnScaleStateListener listener) {
-    this.mOnScaleStateListener = listener;
   }
 
   public void setScale(float scale, boolean animate) {
@@ -746,7 +728,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, View.OnLayoutCha
     private final long mStartTime;
     private final float mZoomStart, mZoomEnd;
 
-    public AnimatedZoomRunnable(
+    AnimatedZoomRunnable(
         final float currentZoom, final float targetZoom, final float focalX, final float focalY) {
       mFocalX = focalX;
       mFocalY = focalY;
@@ -780,15 +762,15 @@ public class PhotoViewAttacher implements View.OnTouchListener, View.OnLayoutCha
     private final OverScroller mScroller;
     private int mCurrentX, mCurrentY;
 
-    public FlingRunnable(Context context) {
+    FlingRunnable(Context context) {
       mScroller = new OverScroller(context);
     }
 
-    public void cancelFling() {
+    void cancelFling() {
       mScroller.forceFinished(true);
     }
 
-    public void fling(int viewWidth, int viewHeight, int velocityX, int velocityY) {
+    void fling(int viewWidth, int viewHeight, int velocityX, int velocityY) {
       final RectF rect = getDisplayRect();
       if (rect == null) {
         return;
