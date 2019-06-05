@@ -35,7 +35,6 @@ public class ImageModel implements Parcelable {
         }
       };
   private Uri uri;
-  private boolean scaled = false;
 
   public ImageModel(String url) {
     uri = Uri.parse(url);
@@ -65,13 +64,5 @@ public class ImageModel implements Parcelable {
 
   public void setUri(Uri uri) {
     this.uri = uri;
-  }
-
-  public boolean isScaled() {
-    return scaled;
-  }
-
-  public void setScaled(boolean scaled) {
-    this.scaled = scaled;
   }
 }

@@ -27,19 +27,18 @@ public class SimpleActivity extends AppCompatActivity {
         Uri.parse("https://novel.tl/images/thumb/3/35/TnYnN_v01_a.png/720px-TnYnN_v01_a.jpg"),
         Uri.parse("https://novel.tl/images/thumb/8/85/NGNL_v01_a.jpg/720px-NGNL_v01_a.jpg"));
 
-    pvSimple.setFlingScroll(false);
     pvSimple.setBackgroundFade(false);
     pvSimple.setScaling(true);
-    pvSimple.setSwipeToDismiss(false);
+    pvSimple.setSwipeToDismiss(true);
     pvSimple.setBackgroundColor(Color.BLACK);
     pvSimple.setDraweeHierarchyBuilder(
         GenericDraweeHierarchyBuilder.newInstance(getResources())
             .setProgressBarImage(new CircleProgressBarDrawable()));
     pvSimple.setOnDismissListener(this::finish);
     pvSimple.setOnClickListener(
-        (v, x, y) ->
+        (v) ->
             Toast.makeText(
-                this.getApplicationContext(), "CLICK" + "\n" + x + "\n" + y, Toast.LENGTH_SHORT)
+                this.getApplicationContext(), "CLICK", Toast.LENGTH_SHORT)
                 .show());
   }
 }

@@ -25,6 +25,7 @@ import android.view.MotionEvent;
 import android.widget.FrameLayout;
 import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.PagerSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
@@ -40,15 +41,14 @@ import java.util.List;
 
 public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveListener {
 
-  private boolean flingScroll;
   private boolean swipeToDismiss;
   private boolean scaling;
   private boolean backgroundFade;
 
   private ImageAdapter adapter;
   private LinearLayoutManager layoutManager;
-
   private PhotosRecyclerView recyclerView;
+
   private FrameLayout dismissView;
 
   private SwipeDirectionDetector directionDetector;
@@ -61,7 +61,6 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
   private PagerSnapHelper snapHelper;
 
   private ImageRequestBuilder imageRequest;
-
   private GenericDraweeHierarchyBuilder draweeHierarchy;
 
   private ArrayList<ImageModel> items;
@@ -111,16 +110,15 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
           swipeDismissListener.onTouch(dismissView, event);
         }
         if (direction != null) {
-          ImageViewHolder holder =
-              (ImageViewHolder)
-                  recyclerView.findViewHolderForLayoutPosition(
-                      layoutManager.findFirstVisibleItemPosition());
-          if (holder != null && holder.pdvPage.getScale() == 1f) {
-            switch (direction) {
-              case UP:
-              case DOWN:
+          switch (direction) {
+            case UP:
+            case DOWN:
+              ImageViewHolder holder =
+                  (ImageViewHolder)
+                      recyclerView.findViewHolderForLayoutPosition(
+                          layoutManager.findFirstCompletelyVisibleItemPosition());
+              if (holder != null && holder.pdvPage.getScale() == 1f)
                 return swipeDismissListener.onTouch(dismissView, event);
-            }
           }
         }
       }
@@ -130,13 +128,11 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
 
   private void init(Context context, AttributeSet attrs) {
     FrameLayout.inflate(context, R.layout.photos_view, this);
-    flingScroll = false;
     swipeToDismiss = false;
     scaling = false;
     backgroundFade = false;
     if (attrs != null) {
       TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.PhotosView);
-      flingScroll = ta.getBoolean(R.styleable.PhotosView_enableFlingScroll, false);
       swipeToDismiss = ta.getBoolean(R.styleable.PhotosView_enableSwipeToDismiss, false);
       scaling = ta.getBoolean(R.styleable.PhotosView_enableScaling, false);
       backgroundFade = ta.getBoolean(R.styleable.PhotosView_enableBackgroundFade, false);
@@ -160,11 +156,6 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
         };
   }
 
-  public void setFlingScroll(boolean flingScroll) {
-    this.flingScroll = flingScroll;
-    initRecyclerView();
-  }
-
   public void setSwipeToDismiss(boolean swipeToDismiss) {
     this.swipeToDismiss = swipeToDismiss;
   }
@@ -184,6 +175,38 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
   public void setPageLayout(@LayoutRes int pageLayout, @IdRes int pageViewId) {
     this.pageLayout = pageLayout;
     this.pageViewId = pageViewId;
+  }
+
+  public boolean isSwipeToDismiss() {
+    return swipeToDismiss;
+  }
+
+  public boolean isScaling() {
+    return scaling;
+  }
+
+  public boolean isBackgroundFade() {
+    return backgroundFade;
+  }
+
+  @Nullable
+  public ImageAdapter getAdapter() {
+    return adapter;
+  }
+
+  @Nullable
+  public LinearLayoutManager getLayoutManager() {
+    return layoutManager;
+  }
+
+  @Nullable
+  public RecyclerView getRecyclerView() {
+    return recyclerView;
+  }
+
+  @Nullable
+  public ArrayList<ImageModel> getItems() {
+    return items;
   }
 
   public void setOnDismissListener(OnDismissListener dismissListener) {
@@ -285,11 +308,7 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
     if (snapHelper == null) {
       snapHelper = new PagerSnapHelper();
     }
-    if (!flingScroll) {
-      snapHelper.attachToRecyclerView(recyclerView);
-    } else {
-      snapHelper.attachToRecyclerView(null);
-    }
+    snapHelper.attachToRecyclerView(recyclerView);
   }
 
   @Override

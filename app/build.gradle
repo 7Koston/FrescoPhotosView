@@ -41,7 +41,7 @@ dependencies {
     implementation project(':lib')
 
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation "com.google.android.material:material:1.1.0-alpha06"
+    implementation "com.google.android.material:material:1.1.0-alpha07"
 
     implementation "com.facebook.fresco:imagepipeline-okhttp3:${versions.fresco}"
     implementation "com.facebook.fresco:webpsupport:${versions.fresco}"
@@ -52,6 +52,6 @@ dependencies {
     debugImplementation "com.squareup.okhttp3:logging-interceptor:$okHttp3"
 
     testImplementation 'junit:junit:4.12'
-    androidTestImplementation 'androidx.test:runner:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
 }
