@@ -177,6 +177,19 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
     this.pageViewId = pageViewId;
   }
 
+  public boolean clearScale(float scale, boolean animated) {
+    ImageViewHolder holder =
+        (ImageViewHolder)
+            recyclerView.findViewHolderForLayoutPosition(
+                layoutManager.findFirstCompletelyVisibleItemPosition());
+    if (holder != null && holder.pdvPage.getScale() != 1f) {
+      holder.pdvPage.setScale(scale, animated);
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   public boolean isSwipeToDismiss() {
     return swipeToDismiss;
   }
