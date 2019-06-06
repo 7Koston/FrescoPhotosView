@@ -16,6 +16,7 @@
 
 package com.github.koston.photosview.view;
 
+import android.view.MotionEvent;
 import android.view.View;
 
 public interface OnViewTapListener {
@@ -25,8 +26,6 @@ public interface OnViewTapListener {
    * user taps anywhere on the view, tapping on 'whitespace' will not be ignored.
    *
    * @param view - View the user tapped.
-   * @param x - where the user tapped from the left of the View.
-   * @param y - where the user tapped from the top of the View.
    */
-  void onViewTap(View view, float x, float y);
+  void onViewTap(View view, MotionEvent event);
 }
