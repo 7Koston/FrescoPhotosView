@@ -1,6 +1,6 @@
 # FrescoPhotosView
 
-Photos view based on [PhotoView](https://github.com/chrisbanes/PhotoView) with [Fresco](https://github.com/chrisbanes/PhotoView) support.
+Photos view based on [PhotoView](https://github.com/chrisbanes/PhotoView) with [Fresco](https://github.com/facebook/fresco) support.
 
 This library uses RecyclerView + PagerSnapHelper to implement "pager-like" view witch you can use for your purposes.
 
