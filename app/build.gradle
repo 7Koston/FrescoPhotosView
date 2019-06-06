@@ -8,9 +8,11 @@ android {
     defaultConfig {
         applicationId "com.github.koston.photosview"
         minSdkVersion buildConfig.minSdk
+        compileSdkVersion buildConfig.compileSdk
+        buildToolsVersion buildConfig.buildTools
         targetSdkVersion buildConfig.targetSdk
-        versionCode 1
-        versionName "1.0.0"
+        versionCode 3
+        versionName "1.0.2"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
