@@ -67,6 +67,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, View.OnLayoutCha
   private float mMaxScale = DEFAULT_MAX_SCALE;
   private boolean mAllowParentInterceptOnEdge = true;
   private boolean mBlockParentIntercept = false;
+  private boolean mAllowParentInterceptWhenScaled = false;
   private ImageView mImageView;
   // Gesture Detectors
   private GestureDetector mGestureDetector;
@@ -115,6 +116,7 @@ public class PhotoViewAttacher implements View.OnTouchListener, View.OnLayoutCha
           ViewParent parent = mImageView.getParent();
           if (mAllowParentInterceptOnEdge
               && !mScaleDragDetector.isScaling()
+              && checkScale()
               && !mBlockParentIntercept) {
             if (mHorizontalScrollEdge == HORIZONTAL_EDGE_BOTH
                 || (mHorizontalScrollEdge == HORIZONTAL_EDGE_LEFT && dx >= 1f)
@@ -154,6 +156,14 @@ public class PhotoViewAttacher implements View.OnTouchListener, View.OnLayoutCha
           }
         }
       };
+
+  private boolean checkScale() {
+    if (!mAllowParentInterceptWhenScaled) {
+      return getScale() == getMinimumScale();
+    } else {
+      return true;
+    }
+  }
 
   public PhotoViewAttacher(ImageView imageView) {
     mImageView = imageView;
@@ -424,6 +434,10 @@ public class PhotoViewAttacher implements View.OnTouchListener, View.OnLayoutCha
 
   public void setAllowParentInterceptOnEdge(boolean allow) {
     mAllowParentInterceptOnEdge = allow;
+  }
+
+  public void setAllowParentInterceptWhenScaled(boolean allow) {
+    mAllowParentInterceptWhenScaled = allow;
   }
 
   public void setScaleLevels(float minimumScale, float mediumScale, float maximumScale) {
