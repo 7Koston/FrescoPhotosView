@@ -18,7 +18,6 @@ package com.github.koston.photosview.page;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
@@ -53,8 +52,7 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageViewHolder> {
     }
     holder.pdvPage.setEnabled(imageBinder.getScalingEnabled());
     holder.pdvPage.setImageURI(imageBinder.getModelAtPosition(position).getUri());
-    holder.pdvPage.setOnViewTapListener(
-        (view, event) -> Toast.makeText(view.getContext(), "TAP", Toast.LENGTH_SHORT).show());
+    holder.pdvPage.setOnViewTapListener(imageBinder.getOnViewTapListener());
   }
 
   @Override

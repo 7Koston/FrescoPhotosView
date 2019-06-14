@@ -20,6 +20,7 @@ import androidx.annotation.IdRes;
 import androidx.annotation.LayoutRes;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
+import com.github.koston.photosview.view.OnViewTapListener;
 
 public interface ImageBinder {
 
@@ -38,4 +39,6 @@ public interface ImageBinder {
   ImageRequestBuilder getImageRequestBuilder();
 
   GenericDraweeHierarchyBuilder getDraweeHierarchyBuilder();
+
+  OnViewTapListener getOnViewTapListener();
 }

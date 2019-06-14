@@ -219,6 +219,10 @@ public class PhotoDraweeView extends SimpleDraweeView {
     attacher.setAllowParentInterceptOnEdge(allow);
   }
 
+  public void setAllowParentInterceptWhenScaled(boolean allow) {
+    attacher.setAllowParentInterceptWhenScaled(allow);
+  }
+
   public void setScaleLevels(float minimumScale, float mediumScale, float maximumScale) {
     attacher.setScaleLevels(minimumScale, mediumScale, maximumScale);
   }

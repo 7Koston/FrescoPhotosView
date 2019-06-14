@@ -36,6 +36,7 @@ import com.github.koston.photosview.page.ImageAdapter;
 import com.github.koston.photosview.page.ImageBinder;
 import com.github.koston.photosview.page.ImageModel;
 import com.github.koston.photosview.page.ImageViewHolder;
+import com.github.koston.photosview.view.OnViewTapListener;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +55,7 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
   private SwipeDirectionDetector directionDetector;
   private SwipeDirectionDetector.Direction direction;
 
+  private OnViewTapListener viewTapListener;
   private OnDismissListener dismissListener;
   private OnViewMoveListener moveListener;
   private SwipeToDismissListener swipeDismissListener;
@@ -170,6 +172,10 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
 
   public void setMoveListener(OnViewMoveListener moveListener) {
     this.moveListener = moveListener;
+  }
+
+  public void setViewTapListener(OnViewTapListener viewTapListener) {
+    this.viewTapListener = viewTapListener;
   }
 
   public void setPageLayout(@LayoutRes int pageLayout, @IdRes int pageViewId) {
@@ -369,6 +375,11 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
   @Override
   public GenericDraweeHierarchyBuilder getDraweeHierarchyBuilder() {
     return draweeHierarchy;
+  }
+
+  @Override
+  public OnViewTapListener getOnViewTapListener() {
+    return viewTapListener;
   }
 
   public void setDraweeHierarchyBuilder(GenericDraweeHierarchyBuilder draweeHierarchy) {
