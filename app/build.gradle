@@ -11,8 +11,8 @@ android {
         compileSdkVersion buildConfig.compileSdk
         buildToolsVersion buildConfig.buildTools
         targetSdkVersion buildConfig.targetSdk
-        versionCode 5
-        versionName "1.0.4"
+        versionCode 6
+        versionName "1.0.5"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -43,7 +43,7 @@ dependencies {
     implementation project(':lib')
 
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation "com.google.android.material:material:1.1.0-alpha07"
+    implementation "com.google.android.material:material:1.1.0-alpha09"
 
     implementation "com.facebook.fresco:imagepipeline-okhttp3:${versions.fresco}"
     implementation "com.facebook.fresco:webpsupport:${versions.fresco}"
