@@ -19,61 +19,69 @@ public final class SystemUIUtils {
     win.setAttributes(winParams);
   }
 
-  public static int computeSystemUI(
+  public static int calculateSystemUI(
       boolean lightStatusBar,
       boolean lightNavigationBar,
       boolean hideStatusBar,
-      boolean hideNavigationBar) {
+      boolean hideNavigationBar,
+      boolean isMultiWindow) {
     int ui = 0;
     if (Build.VERSION.SDK_INT < 19) {
-      ui = View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+      ui = View.SYSTEM_UI_FLAG_LAYOUT_STABLE | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN;
       if (hideStatusBar) {
         ui = ui | View.SYSTEM_UI_FLAG_FULLSCREEN;
       }
       if (hideNavigationBar) {
-        ui = ui | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+        ui = ui | View.SYSTEM_UI_FLAG_LOW_PROFILE;
       }
     } else if (Build.VERSION.SDK_INT < 23) {
       ui =
           View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-              | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+              | View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+              | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+              | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
       if (hideStatusBar) {
         ui = ui | View.SYSTEM_UI_FLAG_FULLSCREEN;
       }
       if (hideNavigationBar) {
-        ui = ui | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+        ui = ui | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
       }
     } else if (Build.VERSION.SDK_INT < 27) {
-      ui =
-          View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-              | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-      if (hideStatusBar) {
+      ui = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+      if (!isMultiWindow) {
+        ui =
+            ui | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+      }
+      if (hideStatusBar && !isMultiWindow) {
         ui = ui | View.SYSTEM_UI_FLAG_FULLSCREEN;
       }
-      if (hideNavigationBar) {
-        ui = ui | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+      if (hideNavigationBar && !isMultiWindow) {
+        ui = ui | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
       }
       if (lightStatusBar) {
         ui = ui | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
       }
-    } else if (Build.VERSION.SDK_INT < 30) {
-      ui =
-          View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-              | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
-      if (hideStatusBar) {
+    } else if (Build.VERSION.SDK_INT < 40) {
+      ui = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+      if (!isMultiWindow) {
+        ui =
+            ui | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+      }
+      if (hideStatusBar && !isMultiWindow) {
         ui = ui | View.SYSTEM_UI_FLAG_FULLSCREEN;
       }
-      if (hideNavigationBar) {
-        ui = ui | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+      if (hideNavigationBar && !isMultiWindow) {
+        ui = ui | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION;
       }
-      if (lightStatusBar) {
+      if (lightStatusBar && !isMultiWindow) {
         ui = ui | View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR;
       }
       if (lightNavigationBar) {
         ui = ui | View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
       }
     }
-    //photos_view.getWindow().getDecorView().setSystemUiVisibility(ui);
     return ui;
   }
 }
