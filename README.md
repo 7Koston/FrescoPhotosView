@@ -4,7 +4,7 @@
 
 Photos view based on [PhotoView](https://github.com/chrisbanes/PhotoView) with [Fresco](https://github.com/facebook/fresco) support.
 
-This library uses RecyclerView + PagerSnapHelper to implement "pager-like" view witch you can use for your purposes.
+This library uses RecyclerView + PagerSnapHelper to implement "pager-like" view which you can use for your purposes.
 
 ### Including in project
 
