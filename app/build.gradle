@@ -1,6 +1,6 @@
 apply plugin: 'com.android.application'
 
-ext.okHttp3 = '3.12.6'
+ext.okHttp3 = '3.12.8'
 
 android {
     compileSdkVersion buildConfig.compileSdk
@@ -11,8 +11,8 @@ android {
         compileSdkVersion buildConfig.compileSdk
         buildToolsVersion buildConfig.buildTools
         targetSdkVersion buildConfig.targetSdk
-        versionCode 7
-        versionName "1.0.6"
+        versionCode 8
+        versionName "1.0.7"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -43,7 +43,7 @@ dependencies {
     implementation project(':lib')
 
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation "com.google.android.material:material:1.2.0-alpha01"
+    implementation "com.google.android.material:material:1.2.0-alpha02"
 
     implementation "com.facebook.fresco:imagepipeline-okhttp3:${versions.fresco}"
     implementation "com.facebook.fresco:webpsupport:${versions.fresco}"

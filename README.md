@@ -6,6 +6,10 @@ Photos view based on [PhotoView](https://github.com/chrisbanes/PhotoView) with [
 
 This library uses RecyclerView + PagerSnapHelper to implement "pager-like" view which you can use for your purposes.
 
+<p align="center">
+  <img src="https://github.com/7Koston/FrescoPhotosView/blob/master/preview/FrescoPhotosView.gif" height="400">
+</p>
+
 ### Including in project
 
 Add it in your root build.gradle at the end of repositories:
@@ -20,7 +24,7 @@ allprojects {
 Add the dependency:
 ```gradle
 dependencies {
-  implementation 'com.github.7Koston:FrescoPhotosView:1.0.6'
+  implementation 'com.github.7Koston:FrescoPhotosView:1.0.7'
 }
 ```
 

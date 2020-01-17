@@ -1,23 +1,11 @@
 package com.github.koston.photosview.fresco.example.utils;
 
+import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
-import androidx.appcompat.app.AppCompatActivity;
 
 public final class SystemUIUtils {
-
-  public static void setWindowFlag(AppCompatActivity activity, final int bits, boolean on) {
-    Window win = activity.getWindow();
-    WindowManager.LayoutParams winParams = win.getAttributes();
-    if (on) {
-      winParams.flags |= bits;
-    } else {
-      winParams.flags &= ~bits;
-    }
-    win.setAttributes(winParams);
-  }
 
   public static int calculateSystemUI(
       boolean lightStatusBar,
@@ -50,8 +38,7 @@ public final class SystemUIUtils {
       ui = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
       if (!isMultiWindow) {
         ui =
-            ui | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+            ui | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
       }
       if (hideStatusBar && !isMultiWindow) {
         ui = ui | View.SYSTEM_UI_FLAG_FULLSCREEN;
@@ -66,8 +53,7 @@ public final class SystemUIUtils {
       ui = View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
       if (!isMultiWindow) {
         ui =
-            ui | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
+            ui | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION;
       }
       if (hideStatusBar && !isMultiWindow) {
         ui = ui | View.SYSTEM_UI_FLAG_FULLSCREEN;
@@ -83,5 +69,17 @@ public final class SystemUIUtils {
       }
     }
     return ui;
+  }
+
+  public static boolean checkSystemUiMode(Context context) {
+    int currentNightMode =
+        context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+    switch (currentNightMode) {
+      case Configuration.UI_MODE_NIGHT_NO:
+        return false;
+      case Configuration.UI_MODE_NIGHT_YES:
+        return true;
+    }
+    return true;
   }
 }

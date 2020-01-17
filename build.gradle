@@ -4,12 +4,12 @@ buildscript {
             targetSdk   : 29,
             minSdk      : 17,
             buildTools  : "29.0.2",
-            gradlePlugin: '3.5.2'
+            gradlePlugin: '3.5.3'
     ]
     ext.versions = [
             appcompat   : '1.1.0',
-            recyclerview: '1.1.0-rc01',
-            fresco      : '2.0.0'
+            recyclerview: '1.1.0',
+            fresco      : '2.1.0'
     ]
     ext.deps = [
             'androidx': [
