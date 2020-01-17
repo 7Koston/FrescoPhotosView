@@ -7,7 +7,7 @@ Photos view based on [PhotoView](https://github.com/chrisbanes/PhotoView) with [
 This library uses RecyclerView + PagerSnapHelper to implement "pager-like" view which you can use for your purposes.
 
 <p align="center">
-  <img src="https://github.com/7Koston/FrescoPhotosView/blob/master/preview/FrescoPhotosView.gif" height="400">
+  <img src="https://github.com/7Koston/FrescoPhotosView/blob/master/preview/FrescoPhotosView.gif" height="500">
 </p>
 
 ### Including in project
