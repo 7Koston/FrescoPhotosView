@@ -9,8 +9,8 @@ android {
         targetSdkVersion buildConfig.targetSdk
         compileSdkVersion buildConfig.compileSdk
         buildToolsVersion buildConfig.buildTools
-        versionCode 8
-        versionName "1.0.7"
+        versionCode 9
+        versionName "1.0.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
