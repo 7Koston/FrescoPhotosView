@@ -24,7 +24,7 @@ allprojects {
 Add the dependency:
 ```gradle
 dependencies {
-  implementation 'com.github.7Koston:FrescoPhotosView:1.1.1'
+  implementation 'com.github.7Koston:FrescoPhotosView:1.1.2'
 }
 ```
 
