@@ -11,7 +11,7 @@ import com.github.koston.photosview.fresco.example.utils.ArcUtils;
 public class CircleProgressBarDrawable extends ProgressBarDrawable {
   private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private int mLevel = 0;
-  private int maxLevel = 10000;
+  private final int maxLevel = 10000;
 
   @Override
   protected boolean onLevelChange(int level) {
