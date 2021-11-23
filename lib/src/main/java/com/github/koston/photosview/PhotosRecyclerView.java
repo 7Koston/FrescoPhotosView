@@ -59,16 +59,16 @@ public class PhotosRecyclerView extends RecyclerView {
     return super.onInterceptTouchEvent(e);
   }
 
-  private void init(Context context) {
-    gestureDetector = new ScaleGestureDetector(context, new GestureListener());
-  }
-
   public boolean isScaling() {
     return isScaling;
   }
 
   public boolean isMultitouch() {
     return isMultitouch;
+  }
+
+  private void init(Context context) {
+    gestureDetector = new ScaleGestureDetector(context, new GestureListener());
   }
 
   private class GestureListener implements ScaleGestureDetector.OnScaleGestureListener {

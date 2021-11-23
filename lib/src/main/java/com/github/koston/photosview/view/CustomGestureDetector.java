@@ -33,12 +33,11 @@ class CustomGestureDetector {
   private final float mTouchSlop;
 
   private final ScaleGestureDetector mDetector;
-
+  private final float mMinimumVelocity;
   private VelocityTracker mVelocityTracker;
   private boolean mIsDragging;
   private float mLastTouchX;
   private float mLastTouchY;
-  private final float mMinimumVelocity;
   private int mActivePointerId = INVALID_POINTER_ID;
   private OnGestureListener mListener;
 
@@ -76,10 +75,27 @@ class CustomGestureDetector {
     mDetector = new ScaleGestureDetector(context, mScaleListener);
   }
 
+  boolean isScaling() {
+    return mDetector.isInProgress();
+  }
+
+  boolean isDragging() {
+    return mIsDragging;
+  }
+
+  boolean onTouchEvent(MotionEvent ev) {
+    try {
+      mDetector.onTouchEvent(ev);
+      return processTouchEvent(ev);
+    } catch (IllegalArgumentException e) {
+      // Fix for support lib bug, happening when onDestroy is called
+      return true;
+    }
+  }
+
   private int getActivePointerIndex(MotionEvent ev) {
-    return mActivePointerId == INVALID_POINTER_ID
-        ? INVALID_INDEX
-        : ev.findPointerIndex(mActivePointerId);
+    return mActivePointerId == INVALID_POINTER_ID ? INVALID_INDEX : ev.findPointerIndex(
+        mActivePointerId);
   }
 
   private float getActiveX(MotionEvent ev) {
@@ -105,24 +121,6 @@ class CustomGestureDetector {
       return ev.getY(index);
     } catch (Exception e) {
       return ev.getY();
-    }
-  }
-
-  boolean isScaling() {
-    return mDetector.isInProgress();
-  }
-
-  boolean isDragging() {
-    return mIsDragging;
-  }
-
-  boolean onTouchEvent(MotionEvent ev) {
-    try {
-      mDetector.onTouchEvent(ev);
-      return processTouchEvent(ev);
-    } catch (IllegalArgumentException e) {
-      // Fix for support lib bug, happening when onDestroy is called
-      return true;
     }
   }
 

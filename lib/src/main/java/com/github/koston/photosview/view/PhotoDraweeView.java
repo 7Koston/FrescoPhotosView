@@ -47,34 +47,10 @@ public class PhotoDraweeView extends SimpleDraweeView {
     init();
   }
 
-  private void init() {
-    attacher = new DraweeViewAttacher(this);
-    getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
-    // We always pose as a Matrix scale type, though we can change to another scale type
-    // via the attacher
-    super.setScaleType(ImageView.ScaleType.MATRIX);
-    // apply the previously applied scale type
-    if (pendingScaleType != null) {
-      setScaleType(pendingScaleType);
-      pendingScaleType = null;
-    }
-  }
-
   @Override
   protected void onDraw(Canvas canvas) {
     canvas.concat(attacher.getImageMatrix());
     super.onDraw(canvas);
-  }
-
-  /**
-   * Get the current {@link PhotoViewAttacher} for this view. Be wary of holding on to references to
-   * this attacher, as it has a reference to this view, which, if a reference is held in the wrong
-   * place, can cause memory leaks.
-   *
-   * @return the attacher.
-   */
-  public PhotoViewAttacher getAttacher() {
-    return attacher;
   }
 
   @Override
@@ -86,7 +62,8 @@ public class PhotoDraweeView extends SimpleDraweeView {
   public void setScaleType(ImageView.ScaleType scaleType) {
     if (attacher == null) {
       pendingScaleType = scaleType;
-    } else {
+    }
+    else {
       attacher.setScaleType(scaleType);
     }
   }
@@ -139,6 +116,17 @@ public class PhotoDraweeView extends SimpleDraweeView {
       attacher.update();
     }
     return changed;
+  }
+
+  /**
+   * Get the current {@link PhotoViewAttacher} for this view. Be wary of holding on to references to
+   * this attacher, as it has a reference to this view, which, if a reference is held in the wrong
+   * place, can cause memory leaks.
+   *
+   * @return the attacher.
+   */
+  public PhotoViewAttacher getAttacher() {
+    return attacher;
   }
 
   public void setRotationTo(float rotationDegree) {
@@ -269,5 +257,18 @@ public class PhotoDraweeView extends SimpleDraweeView {
 
   public void setOnSingleFlingListener(OnSingleFlingListener onSingleFlingListener) {
     attacher.setOnSingleFlingListener(onSingleFlingListener);
+  }
+
+  private void init() {
+    attacher = new DraweeViewAttacher(this);
+    getHierarchy().setActualImageScaleType(ScalingUtils.ScaleType.FIT_CENTER);
+    // We always pose as a Matrix scale type, though we can change to another scale type
+    // via the attacher
+    super.setScaleType(ImageView.ScaleType.MATRIX);
+    // apply the previously applied scale type
+    if (pendingScaleType != null) {
+      setScaleType(pendingScaleType);
+      pendingScaleType = null;
+    }
   }
 }

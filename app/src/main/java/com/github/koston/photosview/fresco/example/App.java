@@ -20,19 +20,16 @@ public class App extends MultiDexApplication {
     if (BuildConfig.DEBUG) {
       Set<RequestListener> requestListeners = new HashSet<>();
       requestListeners.add(new RequestLoggingListener());
-      Fresco.initialize(
-          this.getApplicationContext(),
-          OkHttpImagePipelineConfigFactory.newBuilder(
-              getApplicationContext(), OkHttpModule.getFrescoHttpClient())
-              .setRequestListeners(requestListeners)
-              .build());
+      Fresco.initialize(this.getApplicationContext(), OkHttpImagePipelineConfigFactory.newBuilder(
+          getApplicationContext(), OkHttpModule.getFrescoHttpClient())
+          .setRequestListeners(requestListeners)
+          .build());
       FLog.setMinimumLoggingLevel(FLog.VERBOSE);
-    } else {
-      Fresco.initialize(
-          this.getApplicationContext(),
-          OkHttpImagePipelineConfigFactory.newBuilder(
-              getApplicationContext(), OkHttpModule.getFrescoHttpClient())
-              .build());
+    }
+    else {
+      Fresco.initialize(this.getApplicationContext(),
+          OkHttpImagePipelineConfigFactory.newBuilder(getApplicationContext(),
+              OkHttpModule.getFrescoHttpClient()).build());
     }
   }
 }

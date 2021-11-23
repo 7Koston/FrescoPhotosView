@@ -34,10 +34,8 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageViewHolder> {
   @NonNull
   @Override
   public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-    return new ImageViewHolder(
-        LayoutInflater.from(parent.getContext())
-            .inflate(imageBinder.getPageLayout(), parent, false),
-        imageBinder.getPageViewId());
+    return new ImageViewHolder(LayoutInflater.from(parent.getContext())
+        .inflate(imageBinder.getPageLayout(), parent, false), imageBinder.getPageViewId());
   }
 
   @Override

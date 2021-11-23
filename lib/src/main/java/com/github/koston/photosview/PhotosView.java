@@ -116,11 +116,11 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
             case UP:
             case DOWN:
               ImageViewHolder holder =
-                  (ImageViewHolder)
-                      recyclerView.findViewHolderForLayoutPosition(
-                          layoutManager.findFirstCompletelyVisibleItemPosition());
-              if (holder != null && holder.pdvPage.getScale() == 1f)
+                  (ImageViewHolder) recyclerView.findViewHolderForLayoutPosition(
+                      layoutManager.findFirstCompletelyVisibleItemPosition());
+              if (holder != null && holder.pdvPage.getScale() == 1f) {
                 return swipeDismissListener.onTouch(dismissView, event);
+              }
           }
         }
       }
@@ -128,46 +128,63 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
     return super.dispatchTouchEvent(event);
   }
 
-  private void init(Context context, AttributeSet attrs) {
-    FrameLayout.inflate(context, R.layout.photos_view, this);
-    swipeToDismiss = false;
-    scaling = false;
-    backgroundFade = false;
-    if (attrs != null) {
-      TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.PhotosView);
-      swipeToDismiss = ta.getBoolean(R.styleable.PhotosView_enableSwipeToDismiss, false);
-      scaling = ta.getBoolean(R.styleable.PhotosView_enableScaling, false);
-      backgroundFade = ta.getBoolean(R.styleable.PhotosView_enableBackgroundFade, false);
+  @Override
+  public int getItemCount() {
+    return items != null ? items.size() : 0;
+  }
 
-      ta.recycle();
+  @Override
+  public ImageModel getModelAtPosition(int position) {
+    return items.get(position);
+  }
+
+  @Override
+  public int getPageViewId() {
+    if (pageViewId != 0) {
+      return pageViewId;
     }
-    recyclerView = findViewById(R.id.pvrvPhotosViewRecyclerView);
-    dismissView = findViewById(R.id.flPhotosViewDismissView);
-
-    initRecyclerView();
-
-    swipeDismissListener = new SwipeToDismissListener(dismissView, dismissListener, this);
-    dismissView.setOnTouchListener(swipeDismissListener);
-
-    directionDetector =
-        new SwipeDirectionDetector(context) {
-          @Override
-          public void onDirectionDetected(Direction dir) {
-            direction = dir;
-          }
-        };
+    else {
+      return R.id.pdvPage;
+    }
   }
 
-  public void setSwipeToDismiss(boolean swipeToDismiss) {
-    this.swipeToDismiss = swipeToDismiss;
+  @Override
+  public int getPageLayout() {
+    if (pageLayout != 0) {
+      return pageLayout;
+    }
+    else {
+      return R.layout.photos_view_page;
+    }
   }
 
-  public void setScaling(boolean scaling) {
-    this.scaling = scaling;
+  @Override
+  public boolean getScalingEnabled() {
+    return scaling;
   }
 
-  public void setBackgroundFade(boolean backgroundFade) {
-    this.backgroundFade = backgroundFade;
+  @Override
+  public ImageRequestBuilder getImageRequestBuilder() {
+    return imageRequest;
+  }
+
+  public void setImageRequestBuilder(ImageRequestBuilder imageRequest) {
+    this.imageRequest = imageRequest;
+  }
+
+  @Override
+  public GenericDraweeHierarchyBuilder getDraweeHierarchyBuilder() {
+    return draweeHierarchy;
+  }
+
+  public void setDraweeHierarchyBuilder(GenericDraweeHierarchyBuilder draweeHierarchy) {
+    this.draweeHierarchy = draweeHierarchy;
+    this.draweeHierarchy.setActualImageScaleType(ScaleType.FIT_CENTER);
+  }
+
+  @Override
+  public OnViewTapListener getOnViewTapListener() {
+    return viewTapListener;
   }
 
   public void setMoveListener(OnViewMoveListener moveListener) {
@@ -184,14 +201,13 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
   }
 
   public boolean clearScale(float scale, boolean animated) {
-    ImageViewHolder holder =
-        (ImageViewHolder)
-            recyclerView.findViewHolderForLayoutPosition(
-                layoutManager.findFirstCompletelyVisibleItemPosition());
+    ImageViewHolder holder = (ImageViewHolder) recyclerView.findViewHolderForLayoutPosition(
+        layoutManager.findFirstCompletelyVisibleItemPosition());
     if (holder != null && holder.pdvPage.getScale() != 1f) {
       holder.pdvPage.setScale(scale, animated);
       return true;
-    } else {
+    }
+    else {
       return false;
     }
   }
@@ -200,12 +216,24 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
     return swipeToDismiss;
   }
 
+  public void setSwipeToDismiss(boolean swipeToDismiss) {
+    this.swipeToDismiss = swipeToDismiss;
+  }
+
   public boolean isScaling() {
     return scaling;
   }
 
+  public void setScaling(boolean scaling) {
+    this.scaling = scaling;
+  }
+
   public boolean isBackgroundFade() {
     return backgroundFade;
+  }
+
+  public void setBackgroundFade(boolean backgroundFade) {
+    this.backgroundFade = backgroundFade;
   }
 
   @Nullable
@@ -226,12 +254,6 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
   @Nullable
   public ArrayList<ImageModel> getItems() {
     return items;
-  }
-
-  public void setOnDismissListener(OnDismissListener dismissListener) {
-    this.dismissListener = dismissListener;
-    swipeDismissListener = new SwipeToDismissListener(dismissView, dismissListener, this);
-    dismissView.setOnTouchListener(swipeDismissListener);
   }
 
   public void setItems(List<Uri> uris) {
@@ -260,6 +282,12 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
     for (int i = 0; i < size; i++) {
       items.add(new ImageModel(uris[i]));
     }
+  }
+
+  public void setOnDismissListener(OnDismissListener dismissListener) {
+    this.dismissListener = dismissListener;
+    swipeDismissListener = new SwipeToDismissListener(dismissView, dismissListener, this);
+    dismissView.setOnTouchListener(swipeDismissListener);
   }
 
   public void addItem(Uri uri) {
@@ -316,9 +344,39 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
     }
   }
 
+  private void init(Context context, AttributeSet attrs) {
+    FrameLayout.inflate(context, R.layout.photos_view, this);
+    swipeToDismiss = false;
+    scaling = false;
+    backgroundFade = false;
+    if (attrs != null) {
+      TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.PhotosView);
+      swipeToDismiss = ta.getBoolean(R.styleable.PhotosView_enableSwipeToDismiss, false);
+      scaling = ta.getBoolean(R.styleable.PhotosView_enableScaling, false);
+      backgroundFade = ta.getBoolean(R.styleable.PhotosView_enableBackgroundFade, false);
+
+      ta.recycle();
+    }
+    recyclerView = findViewById(R.id.pvrvPhotosViewRecyclerView);
+    dismissView = findViewById(R.id.flPhotosViewDismissView);
+
+    initRecyclerView();
+
+    swipeDismissListener = new SwipeToDismissListener(dismissView, dismissListener, this);
+    dismissView.setOnTouchListener(swipeDismissListener);
+
+    directionDetector = new SwipeDirectionDetector(context) {
+      @Override
+      public void onDirectionDetected(Direction dir) {
+        direction = dir;
+      }
+    };
+  }
+
   private void initRecyclerView() {
-    if (layoutManager == null)
+    if (layoutManager == null) {
       layoutManager = new LinearLayoutManager(this.getContext(), RecyclerView.HORIZONTAL, false);
+    }
     if (adapter == null) {
       adapter = new ImageAdapter(this);
       recyclerView.setAdapter(adapter);
@@ -328,62 +386,5 @@ public class PhotosView extends FrameLayout implements ImageBinder, OnViewMoveLi
       snapHelper = new PagerSnapHelper();
     }
     snapHelper.attachToRecyclerView(recyclerView);
-  }
-
-  @Override
-  public int getItemCount() {
-    return items != null ? items.size() : 0;
-  }
-
-  @Override
-  public ImageModel getModelAtPosition(int position) {
-    return items.get(position);
-  }
-
-  @Override
-  public int getPageViewId() {
-    if (pageViewId != 0) {
-      return pageViewId;
-    } else {
-      return R.id.pdvPage;
-    }
-  }
-
-  @Override
-  public int getPageLayout() {
-    if (pageLayout != 0) {
-      return pageLayout;
-    } else {
-      return R.layout.photos_view_page;
-    }
-  }
-
-  @Override
-  public boolean getScalingEnabled() {
-    return scaling;
-  }
-
-  @Override
-  public ImageRequestBuilder getImageRequestBuilder() {
-    return imageRequest;
-  }
-
-  public void setImageRequestBuilder(ImageRequestBuilder imageRequest) {
-    this.imageRequest = imageRequest;
-  }
-
-  @Override
-  public GenericDraweeHierarchyBuilder getDraweeHierarchyBuilder() {
-    return draweeHierarchy;
-  }
-
-  @Override
-  public OnViewTapListener getOnViewTapListener() {
-    return viewTapListener;
-  }
-
-  public void setDraweeHierarchyBuilder(GenericDraweeHierarchyBuilder draweeHierarchy) {
-    this.draweeHierarchy = draweeHierarchy;
-    this.draweeHierarchy.setActualImageScaleType(ScaleType.FIT_CENTER);
   }
 }

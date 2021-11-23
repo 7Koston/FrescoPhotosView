@@ -18,20 +18,17 @@ public final class OkHttpModule {
   }
 
   private static void buildFrescoHttpClient() {
-    OkHttpClient.Builder builder =
-        new OkHttpClient.Builder()
-            .retryOnConnectionFailure(true)
-            .protocols(Arrays.asList(Protocol.HTTP_2, Protocol.HTTP_1_1))
-            .connectTimeout(10, TimeUnit.SECONDS)
-            .readTimeout(10, TimeUnit.SECONDS)
-            .writeTimeout(10, TimeUnit.SECONDS)
-            .addNetworkInterceptor(
-                chain -> {
-                  Request request = chain.request();
-                  request = request.newBuilder().header("Accept", "image/webp").build();
-                  return chain.proceed(request);
-                })
-            .hostnameVerifier((hostname, session) -> true);
+    OkHttpClient.Builder builder = new OkHttpClient.Builder().retryOnConnectionFailure(true)
+        .protocols(Arrays.asList(Protocol.HTTP_2, Protocol.HTTP_1_1))
+        .connectTimeout(10, TimeUnit.SECONDS)
+        .readTimeout(10, TimeUnit.SECONDS)
+        .writeTimeout(10, TimeUnit.SECONDS)
+        .addNetworkInterceptor(chain -> {
+          Request request = chain.request();
+          request = request.newBuilder().header("Accept", "image/webp").build();
+          return chain.proceed(request);
+        })
+        .hostnameVerifier((hostname, session) -> true);
     if (BuildConfig.DEBUG) {
       HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
       logging.setLevel(HttpLoggingInterceptor.Level.BODY);

@@ -35,8 +35,8 @@ class SwipeToDismissListener implements View.OnTouchListener {
   private boolean tracking = false;
   private float startY;
 
-  public SwipeToDismissListener(
-      View swipeView, OnDismissListener dismissListener, OnViewMoveListener moveListener) {
+  public SwipeToDismissListener(View swipeView, OnDismissListener dismissListener,
+      OnViewMoveListener moveListener) {
     this.swipeView = swipeView;
     this.dismissListener = dismissListener;
     this.moveListener = moveListener;
@@ -84,26 +84,26 @@ class SwipeToDismissListener implements View.OnTouchListener {
 
     if (currentPosition < -translationLimit) {
       animateTo = -parentHeight;
-    } else if (currentPosition > translationLimit) {
+    }
+    else if (currentPosition > translationLimit) {
       animateTo = parentHeight;
     }
 
     final boolean isDismissed = animateTo != 0.0f;
-    ObjectAnimator animator =
-        ObjectAnimator.ofFloat(swipeView, PROPERTY_TRANSLATION_X, currentPosition, animateTo);
+    ObjectAnimator animator = ObjectAnimator.ofFloat(swipeView, PROPERTY_TRANSLATION_X,
+        currentPosition, animateTo);
 
     animator.setDuration(200);
     animator.setInterpolator(new AccelerateInterpolator());
-    animator.addListener(
-        new AnimatorListenerAdapter() {
-          @Override
-          public void onAnimationEnd(Animator animation) {
-            super.onAnimationEnd(animation);
-            if (isDismissed) {
-              callDismissListener();
-            }
-          }
-        });
+    animator.addListener(new AnimatorListenerAdapter() {
+      @Override
+      public void onAnimationEnd(Animator animation) {
+        super.onAnimationEnd(animation);
+        if (isDismissed) {
+          callDismissListener();
+        }
+      }
+    });
     animator.addUpdateListener(
         animation -> callMoveListener((float) animation.getAnimatedValue(), translationLimit));
     animator.start();

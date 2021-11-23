@@ -22,18 +22,17 @@ import android.os.Parcelable;
 
 public class ImageModel implements Parcelable {
 
-  public static final Creator<ImageModel> CREATOR =
-      new Creator<ImageModel>() {
-        @Override
-        public ImageModel createFromParcel(Parcel in) {
-          return new ImageModel(in);
-        }
+  public static final Creator<ImageModel> CREATOR = new Creator<ImageModel>() {
+    @Override
+    public ImageModel createFromParcel(Parcel in) {
+      return new ImageModel(in);
+    }
 
-        @Override
-        public ImageModel[] newArray(int size) {
-          return new ImageModel[size];
-        }
-      };
+    @Override
+    public ImageModel[] newArray(int size) {
+      return new ImageModel[size];
+    }
+  };
   private Uri uri;
 
   public ImageModel(String url) {

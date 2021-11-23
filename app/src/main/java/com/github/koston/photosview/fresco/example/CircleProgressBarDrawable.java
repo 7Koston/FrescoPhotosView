@@ -11,7 +11,6 @@ import com.github.koston.photosview.fresco.example.utils.ArcUtils;
 public class CircleProgressBarDrawable extends ProgressBarDrawable {
   private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
   private int mLevel = 0;
-  private final int maxLevel = 10000;
 
   @Override
   protected boolean onLevelChange(int level) {
@@ -26,19 +25,20 @@ public class CircleProgressBarDrawable extends ProgressBarDrawable {
       return;
     }
     //if (mLevel < maxLevel / 8) drawBar(canvas, maxLevel / 8, Color.BLUE);
-    drawBar(canvas, mLevel, Color.BLUE);
+    drawBar(canvas, mLevel);
   }
 
-  private void drawBar(Canvas canvas, int level, int color) {
+  private void drawBar(Canvas canvas, int level) {
     Rect bounds = getBounds();
 
     float x = bounds.right / 2f;
     float y = bounds.bottom / 2f;
     PointF center = new PointF(x, y);
 
-    mPaint.setColor(color);
+    mPaint.setColor(Color.BLUE);
     mPaint.setStyle(Paint.Style.STROKE);
     mPaint.setStrokeWidth(2);
+    int maxLevel = 10000;
     if (level != 0) {
       ArcUtils.drawArc(canvas, center, 50, 0, (float) (level * 360 / maxLevel), mPaint);
     } else {
